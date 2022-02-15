@@ -6,8 +6,8 @@ const WrapperStyle = styled.div`
     display: flex;
     flex-direction: column;
     height: 70vh;
-    width: 25vw;
-    border: 1px solid black;
+    width: 482px;
+    /* border: 1px solid black; */
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);

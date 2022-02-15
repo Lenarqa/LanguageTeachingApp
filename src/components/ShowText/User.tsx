@@ -20,7 +20,7 @@ const UserStyled = styled.span`
     position: absolute;
     width: 6rem;
     height: 3rem;
-    border-radius: 50% 50% 10% 10% / 100% 100% 20% 20%;
+    border-radius: 50% 50% 7% 7% / 100% 100% 14% 14%;
     background: #6c6c6c;
   }
 `;
