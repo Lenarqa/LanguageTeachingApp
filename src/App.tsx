@@ -1,10 +1,33 @@
 import React from 'react';
-import './App.css';
-import Hello from './components/Hello/Hello';
+import styled from 'styled-components';
+import Wrapper from './components/UI/Wrapper';
+import ShowText from './components/ShowText/ShowText';
+
+const TempWrapper = styled.div`
+  h2 {
+    color: black;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.1);
+  }
+
+`
+
 
 function App() {
   return (
-    <Hello color="12" >Hello world</Hello>
+    <Wrapper>
+      <TempWrapper>
+        <h2>Translate this sentence</h2>
+        <ShowText />
+        <input type="text" />
+        <div>
+          <p>my</p>
+          <p>dear</p>
+          <p>friend</p>
+          <p>Hello</p>
+        </div>
+        <button>Check</button>
+      </TempWrapper>
+    </Wrapper>
   );
 }
 
