@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Wrapper from "./components/UI/Wrapper";
 import ShowText from "./components/ShowText/ShowText";
+import DndSection from "./components/DndSection/DndSection";
 
 const TempWrapper = styled.div`
   h2 {
@@ -23,13 +24,7 @@ function App() {
       <TempWrapper>
         <h2>Translate this sentence</h2>
         <ShowText />
-        <input type="text" />
-        <div>
-          <p>my</p>
-          <p>dear</p>
-          <p>friend</p>
-          <p>Hello</p>
-        </div>
+        <DndSection />
         <button>Check</button>
       </TempWrapper>
     </Wrapper>

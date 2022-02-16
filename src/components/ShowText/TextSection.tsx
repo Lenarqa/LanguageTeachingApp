@@ -2,15 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import TextItem from "./TextItem";
 
+const myBorderColor = "#252525";
+
 const TextSectionStyle = styled.div`
-  $border-color: #252525;
-  
   position: relative;
   max-width: 60%;
   height: 100%;
   padding: 1rem;
   margin-left: 1rem;
-  border: 2px solid #252525;
+  border: 2px solid ${myBorderColor};
   border-radius: 10px;
 
   display: flex;
@@ -26,7 +26,7 @@ const TextSectionStyle = styled.div`
     left: -19px;
     bottom: 8px;
     border: 10px solid;
-    border-color: #252525 transparent transparent #252525;
+    border-color: ${myBorderColor} transparent transparent ${myBorderColor};
     transform: rotate(180deg);
   }
 
