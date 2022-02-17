@@ -9,23 +9,12 @@ const DndGroupWordsStyled = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
+  margin: 10px;
 `;
-
-const dropHandler = (e: React.DragEvent<HTMLDivElement>) => {
-  e.preventDefault();
-  const data = e.dataTransfer.getData("text");
-  // console.log(data + " from ");
-
-  // setContent(data);
-};
-
-const allowDrop = (e: React.DragEvent<HTMLDivElement>) => {
-  e.preventDefault();
-};
 
 const DndGroupWords: React.FC = (props) => {
   return (
-    <DndGroupWordsStyled onDragOver={allowDrop} onDrop={dropHandler}>
+    <DndGroupWordsStyled>
       {props.children}
     </DndGroupWordsStyled>
   );
