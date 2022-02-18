@@ -5,15 +5,17 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 import WordItem from "./WordItem";
 import DndGroupWords from "./DndGropWords";
+import Button from "../UI/Button";
 import { IWord } from "../../models/models";
 
+
 const DndSectionStyled = styled.div`
+  /* border: 1px solid black;
+  background-color: violet; */
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
   justify-content: center;
-  min-height: 300px;
-  background-color: violet;
+  margin-bottom: 79px;
 `;
 
 const DndSection: React.FC = (props) => {
@@ -88,6 +90,7 @@ const DndSection: React.FC = (props) => {
           ))}
         </DndGroupWords>
       </DndSectionStyled>
+      <Button clickHandler={()=>console.log("Click")}>Check</Button>
     </DragDropContext>
   );
 };

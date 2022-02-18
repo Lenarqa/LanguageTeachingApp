@@ -25,7 +25,6 @@ function App() {
         <h2>Translate this sentence</h2>
         <ShowText />
         <DndSection />
-        <button>Check</button>
       </TempWrapper>
     </Wrapper>
   );

@@ -38,7 +38,7 @@ const TextSectionStyle = styled.div`
     left: -14px;
     bottom: 10px;
     border: 8px solid;
-    border-color: white transparent transparent white;
+    border-color: #E5E5E5 transparent transparent #E5E5E5;;
     transform: rotate(180deg);
   }
 `;
