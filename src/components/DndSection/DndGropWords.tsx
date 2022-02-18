@@ -1,9 +1,14 @@
 import React from "react";
+import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
+
+interface DndGroupWordsProps {
+  droppableId: string;
+}
 
 const DndGroupWordsStyled = styled.div`
   border: 1px solid blue;
-  height: 50%;
+  min-height: 150px;
 
   display: flex;
   justify-content: flex-start;
@@ -12,11 +17,15 @@ const DndGroupWordsStyled = styled.div`
   margin: 10px;
 `;
 
-const DndGroupWords: React.FC = (props) => {
+const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
   return (
-    <DndGroupWordsStyled>
-      {props.children}
-    </DndGroupWordsStyled>
+    <Droppable droppableId={props.droppableId}>
+      {(provided, snapshot)=>(
+      <DndGroupWordsStyled ref={provided.innerRef} {...provided.droppableProps}>
+        {props.children}
+      </DndGroupWordsStyled>
+      )}
+    </Droppable>
   );
 };
 

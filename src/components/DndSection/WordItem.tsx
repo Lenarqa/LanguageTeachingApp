@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
 
 import styled from "styled-components";
 
-
-interface IWordItem {
-  word: string;
+interface WordItemProps {
+  id: string,
+  index:number,
 }
 
 const WordItemStyled = styled.div`
@@ -17,8 +18,20 @@ const WordItemStyled = styled.div`
   margin-left: 10px;
 `;
 
-const WordItem: React.FC<IWordItem> = (props) => {
-  return <WordItemStyled>{props.word}</WordItemStyled>;
+const WordItem: React.FC<WordItemProps> = (props) => {
+  return (
+    <Draggable draggableId={props.id} index={props.index}>
+      {(provided, snapshot) => (
+        <WordItemStyled
+          ref={provided.innerRef}
+          {...provided.dragHandleProps}
+          {...provided.draggableProps}
+        >
+          {props.children}
+        </WordItemStyled>
+      )}
+    </Draggable>
+  );
 };
 
 export default WordItem;
