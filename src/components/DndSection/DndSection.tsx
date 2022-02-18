@@ -58,8 +58,10 @@ const DndSection: React.FC = (props) => {
       complete.splice(destination.index, 0, add);
     }
 
+    
     setPhrase(complete);
     setWords(active);
+    console.log(phrase);
   };
 
   return (

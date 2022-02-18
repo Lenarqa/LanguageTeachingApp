@@ -27,6 +27,7 @@ const WordItem: React.FC<WordItemProps> = (props) => {
           ref={provided.innerRef}
           {...provided.dragHandleProps}
           {...provided.draggableProps}
+          style={{...provided.draggableProps?.style}}
         >
           {props.word}
         </WordItemStyled>

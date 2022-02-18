@@ -14,15 +14,14 @@ const DndGroupWordsStyled = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  flex-wrap: wrap;
-  flex-grow: 1;
-  /* flex-direction: column; */
-  margin: 10px;
+  min-width: 482px;
+  min-height: 90px;
+  margin-bottom: 10px;
 `;
 
 const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
   return (
-    <Droppable droppableId={props.droppableId}>
+    <Droppable droppableId={props.droppableId} direction="horizontal">
       {(provided, snapshot)=>(
       <DndGroupWordsStyled ref={provided.innerRef} {...provided.droppableProps}>
         {props.children}
