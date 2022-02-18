@@ -8,12 +8,15 @@ interface DndGroupWordsProps {
 
 const DndGroupWordsStyled = styled.div`
   border: 1px solid blue;
+  background-color: aliceblue;
   min-height: 150px;
 
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
+  flex-grow: 1;
+  /* flex-direction: column; */
   margin: 10px;
 `;
 
@@ -23,6 +26,7 @@ const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
       {(provided, snapshot)=>(
       <DndGroupWordsStyled ref={provided.innerRef} {...provided.droppableProps}>
         {props.children}
+        {provided.placeholder}
       </DndGroupWordsStyled>
       )}
     </Droppable>

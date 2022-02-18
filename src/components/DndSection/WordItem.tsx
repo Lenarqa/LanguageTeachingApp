@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 import styled from "styled-components";
 
 interface WordItemProps {
-  id: string,
+  id: number,
   index:number,
+  word: string;
 }
 
 const WordItemStyled = styled.div`
@@ -20,14 +21,14 @@ const WordItemStyled = styled.div`
 
 const WordItem: React.FC<WordItemProps> = (props) => {
   return (
-    <Draggable draggableId={props.id} index={props.index}>
+    <Draggable draggableId={props.id.toString()} index={props.index}>
       {(provided, snapshot) => (
         <WordItemStyled
           ref={provided.innerRef}
           {...provided.dragHandleProps}
           {...provided.draggableProps}
         >
-          {props.children}
+          {props.word}
         </WordItemStyled>
       )}
     </Draggable>

@@ -1,15 +1,11 @@
-import { title } from "process";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from "react-beautiful-dnd";
+
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 import WordItem from "./WordItem";
 import DndGroupWords from "./DndGropWords";
+import { IWord } from "../../models/models";
 
 const DndSectionStyled = styled.div`
   display: flex;
@@ -17,22 +13,78 @@ const DndSectionStyled = styled.div`
   border: 1px solid black;
   justify-content: center;
   min-height: 300px;
+  background-color: violet;
 `;
 
 const DndSection: React.FC = (props) => {
+  const [phrase, setPhrase] = useState<IWord[]>([]);
+  const [words, setWords] = useState<IWord[]>(DUMMY_WORDS);
+  
   const onDragEndHandler = (result: DropResult) => {
-    console.log("onDragEndHandler");
-  }
+    const { destination, source } = result;
+
+    // console.log(result);
+
+    if (!destination) {
+      return;
+    }
+
+    if (      
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      console.log("Тоже самое место");
+      return;
+    }
+
+    let add;
+    let active = Array.from(words);
+    let complete = Array.from(phrase);
+    // console.log(active);
+    
+    // Source Logic
+    if (source.droppableId === "words") {
+      add = active[source.index];
+      active.splice(source.index, 1);
+    } else {
+      add = complete[source.index];
+      complete.splice(source.index, 1);
+    }
+
+    // Destination Logic
+    if (destination.droppableId === "words") {
+      active.splice(destination.index, 0, add);
+    } else {
+      complete.splice(destination.index, 0, add);
+    }
+
+    setPhrase(complete);
+    setWords(active);
+  };
 
   return (
     <DragDropContext onDragEnd={onDragEndHandler}>
       <DndSectionStyled>
-          <DndGroupWords droppableId="phrase">
-            
-          </DndGroupWords>
-          <DndGroupWords droppableId="words">
-              <WordItem id="1" index={1}>Hello</WordItem>
-          </DndGroupWords>
+        <DndGroupWords droppableId="phrase">
+          {phrase.map((wordItem, index) => (
+            <WordItem
+              index={index}
+              key={wordItem.id}
+              id={wordItem.id}
+              word={wordItem.word}
+            />
+          ))}
+        </DndGroupWords>
+        <DndGroupWords droppableId="words">
+          {words.map((wordItem, index) => (
+            <WordItem
+              key={wordItem.id}
+              index={index}
+              id={wordItem.id}
+              word={wordItem.word}
+            />
+          ))}
+        </DndGroupWords>
       </DndSectionStyled>
     </DragDropContext>
   );
@@ -40,61 +92,21 @@ const DndSection: React.FC = (props) => {
 
 export default DndSection;
 
-interface IContent {
-  id: number;
-  content: string;
-}
-
-const newItems: IContent[] = [
+const DUMMY_WORDS: IWord[] = [
   {
     id: 1,
-    content: "Hello",
+    word: "Hello",
   },
   {
     id: 2,
-    content: "my",
+    word: "my",
   },
   {
     id: 3,
-    content: "dear",
+    word: "dear",
   },
   {
     id: 4,
-    content: "friend",
-  },
-  {
-    id: 5,
-    content: "dear",
-  },
-  {
-    id: 6,
-    content: "friend",
-  },
-  {
-    id: 7,
-    content: "dear",
-  },
-  {
-    id: 8,
-    content: "friend",
-  },
-  {
-    id: 9,
-    content: "dear",
-  },
-  {
-    id: 10,
-    content: "friend",
+    word: "friend!",
   },
 ];
-
-const New_Dummy_ARRAY = {
-  [1]: {
-    name: "Todo",
-    items: [],
-  },
-  [2]: {
-    name: "inProgress",
-    items: newItems,
-  },
-};
