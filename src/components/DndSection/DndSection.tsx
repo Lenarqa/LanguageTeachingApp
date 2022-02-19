@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-
-import WordItem from "./WordItem";
-import DndGroupWords from "./DndGropWords";
 import Button from "../UI/Button";
-import { IWord } from "../../models/models";
-
+import DndGroupWordsNew from "./DndGropWordNew";
+import { IInitData } from "../../models/models";
 
 const DndSectionStyled = styled.div`
   /* border: 1px solid black;
@@ -19,99 +16,114 @@ const DndSectionStyled = styled.div`
 `;
 
 const DndSection: React.FC = (props) => {
-  const [phrase, setPhrase] = useState<IWord[]>([]);
-  const [words, setWords] = useState<IWord[]>(DUMMY_WORDS);
-  
-  const onDragEndHandler = (result: DropResult) => {
-    const { destination, source } = result;
+  const [myState, setMyState] = useState<IInitData>(initData);
 
-    // console.log(result);
+  const onDragEndHandlerNew = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
 
     if (!destination) {
       return;
     }
 
-    if (      
+    if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
-      console.log("Тоже самое место");
       return;
     }
 
-    let add;
-    let active = Array.from(words);
-    let complete = Array.from(phrase);
-    // console.log(active);
-    
-    // Source Logic
-    if (source.droppableId === "words") {
-      add = active[source.index];
-      active.splice(source.index, 1);
-    } else {
-      add = complete[source.index];
-      complete.splice(source.index, 1);
+    const startRow = myState.rows[source.droppableId];
+    const finishRow = myState.rows[destination.droppableId];
+
+    if (startRow === finishRow) {
+      const newWordIds = Array.from(startRow.wordIds);
+
+      newWordIds.splice(source.index, 1);
+      newWordIds.splice(destination.index, 0, draggableId);
+
+      const newRow = {
+        ...startRow,
+        wordIds: newWordIds,
+      };
+
+      setMyState((prev) => {
+        return {
+          ...prev,
+          rows: {
+            ...myState.rows,
+            [newRow.id]: newRow,
+          },
+        };
+      });
+      return;
     }
 
-    // Destination Logic
-    if (destination.droppableId === "words") {
-      active.splice(destination.index, 0, add);
-    } else {
-      complete.splice(destination.index, 0, add);
-    }
+    //move between rows
+    const startWordIds = Array.from(startRow.wordIds);
+    startWordIds.splice(source.index, 1);
+    const newStart = {
+      ...startRow,
+      wordIds: startWordIds,
+    };
 
-    
-    setPhrase(complete);
-    setWords(active);
-    console.log(phrase);
+    const finishWordIds = Array.from(finishRow.wordIds);
+    finishWordIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finishRow,
+      wordIds: finishWordIds,
+    };
+
+    const newState = {
+      ...myState,
+      rows: {
+        ...myState.rows,
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
+      },
+    };
+
+    setMyState(newState);
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEndHandler}>
+    <DragDropContext onDragEnd={onDragEndHandlerNew}>
       <DndSectionStyled>
-        <DndGroupWords droppableId="phrase">
-          {phrase.map((wordItem, index) => (
-            <WordItem
-              index={index}
-              key={wordItem.id}
-              id={wordItem.id}
-              word={wordItem.word}
-            />
-          ))}
-        </DndGroupWords>
-        <DndGroupWords droppableId="words">
-          {words.map((wordItem, index) => (
-            <WordItem
-              key={wordItem.id}
-              index={index}
-              id={wordItem.id}
-              word={wordItem.word}
-            />
-          ))}
-        </DndGroupWords>
+        {myState.rowsOrder.map((rowId: string) => {
+          const row = myState.rows[rowId];
+          const words = row.wordIds.map((wordId) => myState.words[wordId]);
+          return <DndGroupWordsNew key={row.id} row={row} words={words} />;
+        })}
       </DndSectionStyled>
-      <Button clickHandler={()=>console.log("Click")}>Check</Button>
+      <Button clickHandler={() => console.log("Click")}>Check</Button>
     </DragDropContext>
   );
 };
 
 export default DndSection;
 
-const DUMMY_WORDS: IWord[] = [
-  {
-    id: 1,
-    word: "Hello",
+const initData = {
+  words: {
+    "word-1": { id: "word-1", content: "Welcom" },
+    "word-2": { id: "word-2", content: "to" },
+    "word-3": { id: "word-3", content: "new" },
+    "word-4": { id: "word-4", content: "day" },
+    "word-5": { id: "word-5", content: "how" },
+    "word-6": { id: "word-6", content: "are" },
+    "word-7": { id: "word-7", content: "you?" },
   },
-  {
-    id: 2,
-    word: "my",
+  rows: {
+    "row-1": {
+      id: "row-1",
+      wordIds: [],
+    },
+    "row-2": {
+      id: "row-2",
+      wordIds: ["word-1", "word-2", "word-3", "word-4"],
+    },
+    "row-3": {
+      id: "row-3",
+      wordIds: ["word-5", "word-6", "word-7"],
+    },
   },
-  {
-    id: 3,
-    word: "dear",
-  },
-  {
-    id: 4,
-    word: "friend!",
-  },
-];
+  rowsOrder: ["row-1", "row-2", "row-3"],
+};
