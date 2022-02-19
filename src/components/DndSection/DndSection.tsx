@@ -114,16 +114,24 @@ const initData = {
   rows: {
     "row-1": {
       id: "row-1",
+      isPhrase: true,
       wordIds: [],
     },
     "row-2": {
       id: "row-2",
-      wordIds: ["word-1", "word-2", "word-3", "word-4"],
+      isPhrase:true,
+      wordIds: [],
     },
     "row-3": {
       id: "row-3",
+      isPhrase: false,
+      wordIds: ["word-1", "word-2", "word-3", "word-4"],
+    },
+    "row-4": {
+      id: "row-4",
+      isPhrase: false,
       wordIds: ["word-5", "word-6", "word-7"],
     },
   },
-  rowsOrder: ["row-1", "row-2", "row-3"],
+  rowsOrder: ["row-1", "row-2", "row-3", "row-4"],
 };

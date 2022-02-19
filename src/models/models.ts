@@ -10,6 +10,7 @@ export interface IWordNew {
 
 export interface IRowNew {
   id: string;
+  isPhrase: boolean;
   wordIds: string[];
 }
 
