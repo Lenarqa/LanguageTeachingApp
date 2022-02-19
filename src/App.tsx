@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Wrapper from "./components/UI/Wrapper";
 import ShowText from "./components/ShowText/ShowText";
 import DndSection from "./components/DndSection/DndSection";
+import WordsContextProvider from "./store/words-context";
 
 const TempWrapper = styled.div`
   h2 {
@@ -20,13 +21,15 @@ const TempWrapper = styled.div`
 
 function App() {
   return (
-    <Wrapper>
-      <TempWrapper>
-        <h2>Translate this sentence</h2>
-        <ShowText />
-        <DndSection />
-      </TempWrapper>
-    </Wrapper>
+    <WordsContextProvider>
+      <Wrapper>
+        <TempWrapper>
+          <h2>Translate this sentence</h2>
+          <ShowText />
+          <DndSection />
+        </TempWrapper>
+      </Wrapper>
+    </WordsContextProvider>
   );
 }
 
