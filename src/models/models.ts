@@ -1,8 +1,3 @@
-export interface IWord {
-  id: number;
-  word: string;
-}
-
 export interface IWordNew {
   id: string;
   content: string;
