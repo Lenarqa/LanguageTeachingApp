@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import { WordsContext } from "../../store/words-context";
+import LoadingIndicator from "./LoadingIndicator";
 
 const WrapperStyle = styled.div`
   position: absolute;
@@ -13,7 +15,9 @@ const WrapperStyle = styled.div`
 `;
 
 const Wrapper: React.FC = (props) => {
-  return <WrapperStyle>{props.children}</WrapperStyle>;
+  const wordsCtx = useContext(WordsContext);
+
+  return <WrapperStyle>{wordsCtx.isLoading ? <LoadingIndicator /> : props.children}</WrapperStyle>;
 };
 
 export default Wrapper;

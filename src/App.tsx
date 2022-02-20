@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import Wrapper from "./components/UI/Wrapper";
 import ShowText from "./components/ShowText/ShowText";

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import Button from "../UI/Button";
 import DndGroupWordsNew from "./DndGropWordNew";
 import { IInitData } from "../../models/models";
+import { WordsContext } from "../../store/words-context";
 
 const DndSectionStyled = styled.div`
-  /* border: 1px solid black;
-  background-color: violet; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,7 +15,12 @@ const DndSectionStyled = styled.div`
 `;
 
 const DndSection: React.FC = (props) => {
+  const wordsCtx = useContext(WordsContext);
   const [myState, setMyState] = useState<IInitData>(initData);
+
+  useEffect(() => {
+    setMyState(wordsCtx.words[0]);
+  }, [wordsCtx]);
 
   const onDragEndHandlerNew = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -103,13 +107,10 @@ export default DndSection;
 
 const initData = {
   words: {
-    "word-1": { id: "word-1", content: "Welcom" },
-    "word-2": { id: "word-2", content: "to" },
-    "word-3": { id: "word-3", content: "new" },
-    "word-4": { id: "word-4", content: "day" },
-    "word-5": { id: "word-5", content: "how" },
-    "word-6": { id: "word-6", content: "are" },
-    "word-7": { id: "word-7", content: "you?" },
+    "word-1": { id: "word-1", content: "Hello" },
+    "word-2": { id: "word-2", content: "my" },
+    "word-3": { id: "word-3", content: "dear" },
+    "word-4": { id: "word-4", content: "friend" },
   },
   rows: {
     "row-1": {
@@ -119,7 +120,7 @@ const initData = {
     },
     "row-2": {
       id: "row-2",
-      isPhrase:true,
+      isPhrase: true,
       wordIds: [],
     },
     "row-3": {
@@ -127,11 +128,6 @@ const initData = {
       isPhrase: false,
       wordIds: ["word-1", "word-2", "word-3", "word-4"],
     },
-    "row-4": {
-      id: "row-4",
-      isPhrase: false,
-      wordIds: ["word-5", "word-6", "word-7"],
-    },
   },
-  rowsOrder: ["row-1", "row-2", "row-3", "row-4"],
+  rowsOrder: ["row-1", "row-2", "row-3"],
 };
