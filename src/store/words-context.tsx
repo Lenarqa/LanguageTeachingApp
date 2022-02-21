@@ -16,7 +16,7 @@ type contextObject = {
   curWordData: IInitData;
 };
 
-const initObj = {words: {}, rows: {}, rowsOrder:[], ru:"init"};
+const initObj = {words: {}, rows: {}, rowsOrder:[], ru:"init", en: "init en"};
 
 export const WordsContext = React.createContext<contextObject>({
   isLoading: true,
@@ -30,7 +30,7 @@ const WordsContextProvider: React.FC = (props) => {
   const [curWordData, setCurWordData] = useState<IInitData>(initObj);
 
   const createStructure = useCallback(
-    (sentences: string[], wordEn: string[]) => {
+    (enSentences: string[], sentences: string[], wordEn: string[]) => {
       let words = [];
       for (let i = 0; i < wordEn.length; i++) {
         let newWord: { [key: string]: IWordNew } = {};
@@ -110,11 +110,11 @@ const WordsContextProvider: React.FC = (props) => {
           rows: rows[`row-${i}`],
           rowsOrder: rowsOrder[i],
           ru: sentences[i],
+          en: enSentences[i],
         };
         initData.push(initDataItem);
       }
 
-      // console.log(initData[0]);
       return initData;
     },
     []
@@ -131,15 +131,17 @@ const WordsContextProvider: React.FC = (props) => {
       .then((data) => {
 
         const sentenceAll = data.data.sentenceAll;
-        const sentences: string[] = [];
+        const ruSentences: string[] = [];
+        const enSentences: string[] = [];
         let wordsEn: string[] = [];
 
         for (let i = 0; i < sentenceAll.length; i++) {
-          sentences[i] = sentenceAll[i].ru;
+          ruSentences[i] = sentenceAll[i].ru;
+          enSentences[i] = sentenceAll[i].en;
           wordsEn[i] = sentenceAll[i].en.split(" ");
         }
 
-        let initData = createStructure(sentences, wordsEn);
+        let initData = createStructure(enSentences, ruSentences, wordsEn);
         setWordsData(initData);
         let randomWordIndex:number = Math.floor(Math.random() * initData.length);
 
