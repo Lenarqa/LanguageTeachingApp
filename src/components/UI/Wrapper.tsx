@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const WrapperStyle = styled.div`
@@ -13,6 +13,7 @@ const WrapperStyle = styled.div`
 `;
 
 const Wrapper: React.FC = (props) => {
+  
   return <WrapperStyle>{props.children}</WrapperStyle>;
 };
 

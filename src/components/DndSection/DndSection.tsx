@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
@@ -16,13 +16,8 @@ const DndSectionStyled = styled.div`
 
 const DndSection: React.FC = (props) => {
   const wordsCtx = useContext(WordsContext);
-  console.log(wordsCtx);
   
-  const [myState, setMyState] = useState<IInitData>(wordsCtx.words[0]);
-
-  // useEffect(() => {
-  //   setMyState(wordsCtx.words[0]);
-  // }, [wordsCtx]);
+  const [myState, setMyState] = useState<IInitData>(wordsCtx.curWordData);
 
   const onDragEndHandlerNew = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -39,7 +34,12 @@ const DndSection: React.FC = (props) => {
     }
 
     const startRow = myState.rows[source.droppableId];
+    
     const finishRow = myState.rows[destination.droppableId];
+    if(finishRow.wordIds.length > 3) {
+      return;
+    }
+    
 
     if (startRow === finishRow) {
       const newWordIds = Array.from(startRow.wordIds);
@@ -106,31 +106,3 @@ const DndSection: React.FC = (props) => {
 };
 
 export default DndSection;
-
-const initData = {
-  words: {
-    "word-1": { id: "word-1", content: "Hello" },
-    "word-2": { id: "word-2", content: "my" },
-    "word-3": { id: "word-3", content: "dear" },
-    "word-4": { id: "word-4", content: "friend" },
-  },
-  rows: {
-    "row-1": {
-      id: "row-1",
-      isPhrase: true,
-      wordIds: [],
-    },
-    "row-2": {
-      id: "row-2",
-      isPhrase: true,
-      wordIds: [],
-    },
-    "row-3": {
-      id: "row-3",
-      isPhrase: false,
-      wordIds: ["word-1", "word-2", "word-3", "word-4"],
-    },
-  },
-  rowsOrder: ["row-1", "row-2", "row-3"],
-  ru:"hello",
-};

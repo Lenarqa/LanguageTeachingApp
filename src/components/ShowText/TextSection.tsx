@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { WordsContext } from "../../store/words-context";
 import TextItem from "./TextItem";
 
 const myBorderColor = "#252525";

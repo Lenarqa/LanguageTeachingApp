@@ -12,19 +12,22 @@ const SENTENCE_QUERY = `
 
 type contextObject = {
   isLoading: boolean;
-  setIsLoading: () => void;
-  words: IInitData[];
+  changeWord: () => void;
+  curWordData: IInitData;
 };
+
+const initObj = {words: {}, rows: {}, rowsOrder:[], ru:"init"};
 
 export const WordsContext = React.createContext<contextObject>({
   isLoading: true,
-  setIsLoading: () => {},
-  words: [],
+  changeWord: () => {},
+  curWordData: initObj
 });
 
 const WordsContextProvider: React.FC = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [wordsData, setWordsData] = useState<IInitData[]>([]);
+  const [curWordData, setCurWordData] = useState<IInitData>(initObj);
 
   const createStructure = useCallback(
     (sentences: string[], wordEn: string[]) => {
@@ -126,7 +129,6 @@ const WordsContextProvider: React.FC = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(isLoading);
 
         const sentenceAll = data.data.sentenceAll;
         const sentences: string[] = [];
@@ -139,19 +141,23 @@ const WordsContextProvider: React.FC = (props) => {
 
         let initData = createStructure(sentences, wordsEn);
         setWordsData(initData);
+        let randomWordIndex:number = Math.floor(Math.random() * initData.length);
+
+        setCurWordData(initData[randomWordIndex]);
 
         setIsLoading(false);
       });
   }, [createStructure]);
 
-  const setIsLoadingHandler = () => {
-    setIsLoading((prev) => !prev);
+  const changeWordHandler = () => {
+    console.log("change word handler");
   };
+
 
   const contextValue = {
     isLoading: isLoading,
-    setIsLoading: setIsLoadingHandler,
-    words: wordsData,
+    changeWord: changeWordHandler,
+    curWordData: curWordData,
   };
 
   return (

@@ -39,13 +39,23 @@ const Loading = styled.div`
   }
 `;
 
+const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+`
+
 const LoadingIndicator: React.FC = () => (
-  <Loading>
-    <div />
-    <div />
-    <div />
-    <div />
-  </Loading>
+  <LoadingWrapper>
+    <Loading>
+      <div />
+      <div />
+      <div />
+      <div />
+    </Loading>
+  </LoadingWrapper>
 );
 
 export default LoadingIndicator;

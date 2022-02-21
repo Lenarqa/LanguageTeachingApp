@@ -27,12 +27,12 @@ function App() {
     <>
       {wordsCtx.isLoading ? <LoadingIndicator /> : (
          <Wrapper>
-         <TempWrapper>
-           <h2>Translate this sentence</h2>
-           <ShowText />
-           <DndSection />
-         </TempWrapper>
-       </Wrapper>
+        <TempWrapper>
+          <h2>Translate this sentence</h2>
+          <ShowText />
+          <DndSection />
+        </TempWrapper>
+      </Wrapper>
       )} 
     </>
       
