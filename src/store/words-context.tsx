@@ -23,7 +23,7 @@ export const WordsContext = React.createContext<contextObject>({
 });
 
 const WordsContextProvider: React.FC = (props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [wordsData, setWordsData] = useState<IInitData[]>([]);
 
   const createStructure = useCallback(
@@ -102,10 +102,11 @@ const WordsContextProvider: React.FC = (props) => {
 
       let initData: IInitData[] = [];
       for (let i = 0; i < wordEn.length; i++) {
-        let initDataItem = {
+        let initDataItem: IInitData = {
           words: words[i],
           rows: rows[`row-${i}`],
           rowsOrder: rowsOrder[i],
+          ru: sentences[i],
         };
         initData.push(initDataItem);
       }
@@ -125,20 +126,21 @@ const WordsContextProvider: React.FC = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(isLoading);
 
         const sentenceAll = data.data.sentenceAll;
         const sentences: string[] = [];
         let wordsEn: string[] = [];
 
         for (let i = 0; i < sentenceAll.length; i++) {
-          sentences.push(sentenceAll[i].ru);
+          sentences[i] = sentenceAll[i].ru;
           wordsEn[i] = sentenceAll[i].en.split(" ");
         }
+
         let initData = createStructure(sentences, wordsEn);
         setWordsData(initData);
+
         setIsLoading(false);
-        console.log(isLoading);
       });
   }, [createStructure]);
 
@@ -161,37 +163,3 @@ const WordsContextProvider: React.FC = (props) => {
 
 export default WordsContextProvider;
 
-const initData2 = {
-  words: {
-    "word-1": { id: "word-1", content: "Welcom" },
-    "word-2": { id: "word-2", content: "to" },
-    "word-3": { id: "word-3", content: "new" },
-    "word-4": { id: "word-4", content: "day" },
-    "word-5": { id: "word-5", content: "how" },
-    "word-6": { id: "word-6", content: "are" },
-    "word-7": { id: "word-7", content: "you?" },
-  },
-  rows: {
-    "row-1": {
-      id: "row-1",
-      isPhrase: true,
-      wordIds: [],
-    },
-    "row-2": {
-      id: "row-2",
-      isPhrase: true,
-      wordIds: [],
-    },
-    "row-3": {
-      id: "row-3",
-      isPhrase: false,
-      wordIds: ["word-1", "word-2", "word-3", "word-4"],
-    },
-    "row-4": {
-      id: "row-4",
-      isPhrase: false,
-      wordIds: ["word-5", "word-6", "word-7"],
-    },
-  },
-  rowsOrder: ["row-1", "row-2", "row-3", "row-4"],
-};

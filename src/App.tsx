@@ -3,7 +3,8 @@ import styled from "styled-components";
 import Wrapper from "./components/UI/Wrapper";
 import ShowText from "./components/ShowText/ShowText";
 import DndSection from "./components/DndSection/DndSection";
-import WordsContextProvider from "./store/words-context";
+import { WordsContext } from "./store/words-context";
+import LoadingIndicator from "./components/UI/LoadingIndicator";
 
 const TempWrapper = styled.div`
   h2 {
@@ -20,16 +21,21 @@ const TempWrapper = styled.div`
 `;
 
 function App() {
+  const wordsCtx = useContext(WordsContext);
+
   return (
-    <WordsContextProvider>
-      <Wrapper>
-        <TempWrapper>
-          <h2>Translate this sentence</h2>
-          <ShowText />
-          <DndSection />
-        </TempWrapper>
-      </Wrapper>
-    </WordsContextProvider>
+    <>
+      {wordsCtx.isLoading ? <LoadingIndicator /> : (
+         <Wrapper>
+         <TempWrapper>
+           <h2>Translate this sentence</h2>
+           <ShowText />
+           <DndSection />
+         </TempWrapper>
+       </Wrapper>
+      )} 
+    </>
+      
   );
 }
 

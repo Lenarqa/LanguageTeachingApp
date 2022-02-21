@@ -16,11 +16,13 @@ const DndSectionStyled = styled.div`
 
 const DndSection: React.FC = (props) => {
   const wordsCtx = useContext(WordsContext);
-  const [myState, setMyState] = useState<IInitData>(initData);
+  console.log(wordsCtx);
+  
+  const [myState, setMyState] = useState<IInitData>(wordsCtx.words[0]);
 
-  useEffect(() => {
-    setMyState(wordsCtx.words[0]);
-  }, [wordsCtx]);
+  // useEffect(() => {
+  //   setMyState(wordsCtx.words[0]);
+  // }, [wordsCtx]);
 
   const onDragEndHandlerNew = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -130,4 +132,5 @@ const initData = {
     },
   },
   rowsOrder: ["row-1", "row-2", "row-3"],
+  ru:"hello",
 };

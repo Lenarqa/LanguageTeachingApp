@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { createGlobalStyle } from "styled-components";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import WordsContextProvider from "./store/words-context";
 
 const Global = createGlobalStyle`
   position: relative;
@@ -17,10 +18,10 @@ const Global = createGlobalStyle`
 `;
 
 ReactDOM.render(
-  <>
+  <WordsContextProvider>
     <Global />
     <App />
-  </>,
+  </WordsContextProvider>,
   document.getElementById("root")
 );
 

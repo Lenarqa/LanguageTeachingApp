@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { WordsContext } from "../../store/words-context";
 import TextItem from "./TextItem";
 
 const myBorderColor = "#252525";
@@ -43,14 +44,15 @@ const TextSectionStyle = styled.div`
   }
 `;
 
-const TextSection: React.FC = (props) => {
+interface TextSectionProps {
+  items: string[];
+}
+
+const TextSection: React.FC<TextSectionProps> = (props) => {
   return (
-    <TextSectionStyle>
-      <TextItem>Hello</TextItem>
-      <TextItem>my</TextItem>
-      <TextItem>dear</TextItem>
-      <TextItem>friend</TextItem>
-    </TextSectionStyle>
+      <TextSectionStyle>
+        {props.items.map((word:string, index) => <TextItem key={index}>{word}</TextItem>)}
+      </TextSectionStyle>
   );
 };
 

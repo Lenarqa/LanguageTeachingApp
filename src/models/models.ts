@@ -13,4 +13,5 @@ export interface IInitData {
   words: { [key in string]: IWordNew };
   rows: { [key in string]: IRowNew };
   rowsOrder: string[];
+  ru: string;
 }
