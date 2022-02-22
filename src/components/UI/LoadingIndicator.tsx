@@ -2,12 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 const Loading = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 54px;
+  height: 54px;
 
-    display: inline-block;
-    position: relative;
-    width: 54px;
-    height: 54px;
-    
   & div {
     box-sizing: border-box;
     display: block;
@@ -39,23 +38,13 @@ const Loading = styled.div`
   }
 `;
 
-const LoadingWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-`
-
 const LoadingIndicator: React.FC = () => (
-  <LoadingWrapper>
-    <Loading>
-      <div />
-      <div />
-      <div />
-      <div />
-    </Loading>
-  </LoadingWrapper>
+  <Loading>
+    <div />
+    <div />
+    <div />
+    <div />
+  </Loading>
 );
 
 export default LoadingIndicator;

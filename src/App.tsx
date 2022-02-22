@@ -25,17 +25,18 @@ function App() {
 
   return (
     <>
-      {wordsCtx.isLoading ? <LoadingIndicator /> : (
-         <Wrapper>
-        <TempWrapper>
-          <h2>Translate this sentence</h2>
-          <ShowText />
-          <DndSection />
-        </TempWrapper>
+      <Wrapper>
+        {wordsCtx.isLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <TempWrapper>
+            <h2>Translate this sentence</h2>
+            <ShowText />
+            <DndSection />
+          </TempWrapper>
+        )}
       </Wrapper>
-      )} 
     </>
-      
   );
 }
 
