@@ -134,14 +134,17 @@ const DndSection: React.FC = (props) => {
 
     if (userPhrase === wordsState.en) {
       let synth = window.speechSynthesis;
-      let voices = synth.getVoices();
       var utterThis = new SpeechSynthesisUtterance(userPhrase);
       synth.speak(utterThis);
-
-      setTimeout(()=>{
-        let newState:IInitData = wordsCtx.changeWord();
-        setWordsState(newState);
-      }, 2000);
+      
+      // timeout перед тем как поменять фразу
+      //изходя из длинны сообщения
+      utterThis.onend = function(event) {
+        setTimeout(()=>{
+          let newState:IInitData = wordsCtx.changeWord();
+          setWordsState(newState);
+        }, event.elapsedTime);
+      };
     } else {
       setIsError(true);
     }
