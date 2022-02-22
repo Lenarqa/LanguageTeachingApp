@@ -12,16 +12,18 @@ const SENTENCE_QUERY = `
 
 type contextObject = {
   isLoading: boolean;
-  changeWord: () => void;
+  changeWord: () => IInitData;
   curWordData: IInitData;
+  setCurWordData: (item: IInitData) => void
 };
 
 const initObj = {words: {}, rows: {}, rowsOrder:[], ru:"init", en: "init en"};
 
 export const WordsContext = React.createContext<contextObject>({
   isLoading: true,
-  changeWord: () => {},
-  curWordData: initObj
+  changeWord: () => initObj,
+  curWordData: initObj,
+  setCurWordData: (prevState: IInitData) => {},
 });
 
 const WordsContextProvider: React.FC = (props) => {
@@ -153,13 +155,23 @@ const WordsContextProvider: React.FC = (props) => {
 
   const changeWordHandler = () => {
     console.log("change word handler");
+    let randomWordIndex:number = Math.floor(Math.random() * wordsData.length);
+    setCurWordData(wordsData[randomWordIndex]);
+    return wordsData[randomWordIndex];
   };
 
+
+  const setCurWordDataHandler = () => {
+    let randomWordIndex:number = Math.floor(Math.random() * wordsData.length);
+    setCurWordData(wordsData[randomWordIndex]);
+    return wordsData[randomWordIndex];
+  }
 
   const contextValue = {
     isLoading: isLoading,
     changeWord: changeWordHandler,
     curWordData: curWordData,
+    setCurWordData: setCurWordData,
   };
 
   return (

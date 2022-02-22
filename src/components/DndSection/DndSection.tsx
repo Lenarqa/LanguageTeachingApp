@@ -133,13 +133,16 @@ const DndSection: React.FC = (props) => {
     let userPhrase = userWords.join(" ");
 
     if (userPhrase === wordsState.en) {
-      console.log("Great!");
       let synth = window.speechSynthesis;
       let voices = synth.getVoices();
       var utterThis = new SpeechSynthesisUtterance(userPhrase);
       synth.speak(utterThis);
+
+      setTimeout(()=>{
+        let newState:IInitData = wordsCtx.changeWord();
+        setWordsState(newState);
+      }, 2000);
     } else {
-      console.log("Bad");
       setIsError(true);
     }
   };
