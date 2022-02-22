@@ -14,10 +14,16 @@ type contextObject = {
   isLoading: boolean;
   changeWord: () => IInitData;
   curWordData: IInitData;
-  setCurWordData: (item: IInitData) => void
+  setCurWordData: (item: IInitData) => void;
 };
 
-const initObj = {words: {}, rows: {}, rowsOrder:[], ru:"init", en: "init en"};
+const initObj = {
+  words: {},
+  rows: {},
+  rowsOrder: [],
+  ru: "init",
+  en: "init en",
+};
 
 export const WordsContext = React.createContext<contextObject>({
   isLoading: true,
@@ -67,6 +73,25 @@ const WordsContextProvider: React.FC = (props) => {
         subWordIds.push(subarray);
       }
 
+      // дополнительная функция для перемешивания слов в массиве
+      function shuffle(arr: string[]) {
+        for (var i = 0; i < arr.length; i++) {
+          var j = Math.floor(Math.random() * Math.floor(arr.length));
+          var k = Math.floor(Math.random() * Math.floor(arr.length));
+          var t = arr[j];
+          arr[j] = arr[k];
+          arr[k] = t;
+        }
+        return arr;
+      }
+
+      // перемешиваем слова в строке
+      for (let i = 0; i < subWordIds.length; i++) {
+        for (let j = 0; j < subWordIds[i].length; j++) {
+          subWordIds[i][j] = shuffle(subWordIds[i][j]);
+        }
+      }
+
       let rows: {
         [key: string]: {
           [key: string]: IRowNew;
@@ -97,6 +122,7 @@ const WordsContextProvider: React.FC = (props) => {
 
         rows[`row-${i}`] = newRow;
       }
+      
 
       //create rowsOrder
       let rowsOrder = [];
@@ -131,7 +157,6 @@ const WordsContextProvider: React.FC = (props) => {
     })
       .then((response) => response.json())
       .then((data) => {
-
         const sentenceAll = data.data.sentenceAll;
         const ruSentences: string[] = [];
         const enSentences: string[] = [];
@@ -145,7 +170,9 @@ const WordsContextProvider: React.FC = (props) => {
 
         let initData = createStructure(enSentences, ruSentences, wordsEn);
         setWordsData(initData);
-        let randomWordIndex:number = Math.floor(Math.random() * initData.length);
+        let randomWordIndex: number = Math.floor(
+          Math.random() * initData.length
+        );
 
         setCurWordData(initData[randomWordIndex]);
 
@@ -155,17 +182,16 @@ const WordsContextProvider: React.FC = (props) => {
 
   const changeWordHandler = () => {
     console.log("change word handler");
-    let randomWordIndex:number = Math.floor(Math.random() * wordsData.length);
+    let randomWordIndex: number = Math.floor(Math.random() * wordsData.length);
     setCurWordData(wordsData[randomWordIndex]);
     return wordsData[randomWordIndex];
   };
 
-
   const setCurWordDataHandler = () => {
-    let randomWordIndex:number = Math.floor(Math.random() * wordsData.length);
+    let randomWordIndex: number = Math.floor(Math.random() * wordsData.length);
     setCurWordData(wordsData[randomWordIndex]);
     return wordsData[randomWordIndex];
-  }
+  };
 
   const contextValue = {
     isLoading: isLoading,
@@ -182,4 +208,3 @@ const WordsContextProvider: React.FC = (props) => {
 };
 
 export default WordsContextProvider;
-
