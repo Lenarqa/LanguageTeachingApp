@@ -27,6 +27,7 @@ const DndGroupWordsStyled = styled.div<DndGroupWordsStyledProps>`
 `;
 
 const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
+  console.log("Hello");
   return (
     <Droppable droppableId={props.row.id} direction="horizontal">
       {(provided, snapshot) => (
