@@ -41,127 +41,40 @@ const DndSection: React.FC = (props) => {
 
   const [newWordsState, setNewWordsState] = useState<IPhraseOptions>(dummyData);
 
-  const onDragEndHandlerNew = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
-
-    if (!destination) {
-      return;
-    }
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    const startRow = wordsState.rows[source.droppableId];
-
-    const finishRow = wordsState.rows[destination.droppableId];
-
-    if (startRow === finishRow) {
-      const newWordIds = Array.from(startRow.wordIds);
-
-      newWordIds.splice(source.index, 1);
-      newWordIds.splice(destination.index, 0, draggableId);
-
-      const newRow = {
-        ...startRow,
-        wordIds: newWordIds,
-      };
-
-      setWordsState((prev) => {
-        return {
-          ...prev,
-          rows: {
-            ...wordsState.rows,
-            [newRow.id]: newRow,
-          },
-        };
-      });
-
-      return;
-    }
-
-    //move between rows
-    if (finishRow.wordIds.length > 3) {
-      return;
-    }
-    const startWordIds = Array.from(startRow.wordIds);
-    startWordIds.splice(source.index, 1);
-    const newStart = {
-      ...startRow,
-      wordIds: startWordIds,
-    };
-
-    const finishWordIds = Array.from(finishRow.wordIds);
-    finishWordIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finishRow,
-      wordIds: finishWordIds,
-    };
-
-    const newState = {
-      ...wordsState,
-      rows: {
-        ...wordsState.rows,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      },
-    };
-
-    setWordsState(newState);
-  };
-
-  const onDradStartHandler = () => {
-    setIsError(false);
-  };
-
   const checkHandler = () => {
-    //получаем id слов из строк для ответа
-    let userPhraseWordsIds: string[] = [];
-    for (let i = 0; i < Object.keys(wordsState.rows).length; i++) {
-      if (wordsState.rows[`row-${i}`].isPhrase) {
-        userPhraseWordsIds.splice(
-          userPhraseWordsIds.length,
-          0,
-          ...wordsState.rows[`row-${i}`].wordIds
-        );
-      }
-    }
-
-    // получаем слова
-    let userWords: string[] = [];
-    for (let i = 0; i < userPhraseWordsIds.length; i++) {
-      userWords.splice(
-        userWords.length,
-        0,
-        wordsState.words[userPhraseWordsIds[i]].content
-      );
-    }
-
     // составляем из слов предложение
-    let userPhrase = userWords.join(" ");
+    let userPhrase = newWordsState["phrase"].map(word => word.content).join(' ');
 
-    if (userPhrase === wordsState.en) {
-      let synth = window.speechSynthesis;
-      var utterThis = new SpeechSynthesisUtterance(userPhrase);
-      synth.speak(utterThis);
+    console.log(userPhrase);
 
-      // timeout перед тем как поменять фразу
-      //изходя из длинны сообщения
-      utterThis.onend = function (event) {
-        setTimeout(() => {
-          let newState: IInitData = wordsCtx.changeWord();
-          setWordsState(newState);
-        }, event.elapsedTime);
-      };
-    } else {
-      setIsError(true);
-    }
+    let synth = window.speechSynthesis;
+    var utterThis = new SpeechSynthesisUtterance(userPhrase);
+    synth.speak(utterThis);
+
+    // if (userPhrase === wordsState.en) {
+    //   let synth = window.speechSynthesis;
+    //   var utterThis = new SpeechSynthesisUtterance(userPhrase);
+    //   synth.speak(utterThis);
+
+    //   // timeout перед тем как поменять фразу
+    //   //изходя из длинны сообщения
+    //   utterThis.onend = function (event) {
+    //     // setTimeout(() => {
+    //     //   let newState: IInitData = wordsCtx.changeWord();
+    //     //   setWordsState(newState);
+    //     // }, event.elapsedTime);
+    //   };
+    // } else {
+    //   setIsError(true);
+    // }
   };
 
-  function onChange(sourceId: string, sourceIndex: number, targetIndex: number, targetId?: string | undefined) {    
+  function onChange(
+    sourceId: string,
+    sourceIndex: number,
+    targetIndex: number,
+    targetId?: string | undefined
+  ) {
     if (targetId) {
       const result = move(
         newWordsState[sourceId],
@@ -185,25 +98,12 @@ const DndSection: React.FC = (props) => {
 
   return (
     <GridContextProvider onChange={onChange}>
-       <DndSectionStyled>
-          <DndGroupWords id={"phrase"} newWords={newWordsState.phrase}/>
-          <DndGroupWords id={"words"} newWords={newWordsState.words}/>
-       </DndSectionStyled>
+      <DndSectionStyled>
+        <DndGroupWords id={"phrase"} newWords={newWordsState.phrase} />
+        <DndGroupWords id={"words"} newWords={newWordsState.words} />
+        <Button clickHandler={checkHandler}>Check</Button>
+      </DndSectionStyled>
     </GridContextProvider>
-    // <DragDropContext
-    //   onDragEnd={onDragEndHandlerNew}
-    //   onDragStart={onDradStartHandler}
-    // >
-    //   <DndSectionStyled>
-    //     {wordsState.rowsOrder.map((rowId: string) => {
-    //       const row = wordsState.rows[rowId];
-    //       const words = row.wordIds.map((wordId) => wordsState.words[wordId]);
-    //       return <DndGroupWords key={row.id} row={row} words={words} />;
-    //     })}
-    //   </DndSectionStyled>
-    //   {isError && <ErrorText>Something wrong!</ErrorText>}
-    //   <Button clickHandler={checkHandler}>Check</Button>
-    // </DragDropContext>
   );
 };
 
@@ -221,7 +121,7 @@ interface IPhrase {
 }
 
 interface IPhraseOptions {
-  [key:string]: newIWord[];
+  [key: string]: newIWord[];
 }
 
 const dummyData: IPhraseOptions = {
@@ -236,4 +136,3 @@ const dummyData: IPhraseOptions = {
     { id: 7, position: 7, content: "today" },
   ],
 };
-

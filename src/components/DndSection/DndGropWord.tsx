@@ -29,8 +29,6 @@ const DndGroupWordsStyled = styled.div<DndGroupWordsStyledProps>`
 `;
 
 const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
-  console.log(props.newWords);
-
   return (
       <GridDropZone style={{height: "10rem"}} id={props.id} boxesPerRow={4} rowHeight={70}>
         {props.newWords.map((word) => (
