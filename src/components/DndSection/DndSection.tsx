@@ -8,6 +8,13 @@ import { IInitData } from "../../models/models";
 import { WordsContext } from "../../store/words-context";
 import { IRowNew } from "../../models/models";
 
+import {
+  GridContextProvider,
+  GridDropZone,
+  GridItem,
+  swap,
+  move,
+} from "react-grid-dnd";
 
 const DndSectionStyled = styled.div`
   display: flex;
@@ -32,6 +39,8 @@ const DndSection: React.FC = (props) => {
   const [wordsState, setWordsState] = useState<IInitData>(wordsCtx.curWordData);
   const [isError, setIsError] = useState<boolean>(false);
 
+  const [newWordsState, setNewWordsState] = useState<IPhraseOptions>(dummyData);
+
   const onDragEndHandlerNew = (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
@@ -49,7 +58,6 @@ const DndSection: React.FC = (props) => {
     const startRow = wordsState.rows[source.droppableId];
 
     const finishRow = wordsState.rows[destination.droppableId];
-    
 
     if (startRow === finishRow) {
       const newWordIds = Array.from(startRow.wordIds);
@@ -71,7 +79,7 @@ const DndSection: React.FC = (props) => {
           },
         };
       });
-      
+
       return;
     }
 
@@ -92,7 +100,7 @@ const DndSection: React.FC = (props) => {
       ...finishRow,
       wordIds: finishWordIds,
     };
-    
+
     const newState = {
       ...wordsState,
       rows: {
@@ -101,16 +109,8 @@ const DndSection: React.FC = (props) => {
         [newFinish.id]: newFinish,
       },
     };
-    
+
     setWordsState(newState);
-
-    // console.log(finishRow);
-    // если перемещаем из строки фразы в 
-    //строку слов то делаем сортировку
-    // if(!finishRow.isPhrase){
-
-    // }
-
   };
 
   const onDradStartHandler = () => {
@@ -147,12 +147,12 @@ const DndSection: React.FC = (props) => {
       let synth = window.speechSynthesis;
       var utterThis = new SpeechSynthesisUtterance(userPhrase);
       synth.speak(utterThis);
-      
+
       // timeout перед тем как поменять фразу
       //изходя из длинны сообщения
-      utterThis.onend = function(event) {
-        setTimeout(()=>{
-          let newState:IInitData = wordsCtx.changeWord();
+      utterThis.onend = function (event) {
+        setTimeout(() => {
+          let newState: IInitData = wordsCtx.changeWord();
           setWordsState(newState);
         }, event.elapsedTime);
       };
@@ -161,22 +161,79 @@ const DndSection: React.FC = (props) => {
     }
   };
 
+  function onChange(sourceId: string, sourceIndex: number, targetIndex: number, targetId?: string | undefined) {    
+    if (targetId) {
+      const result = move(
+        newWordsState[sourceId],
+        newWordsState[targetId],
+        sourceIndex,
+        targetIndex
+      );
+      return setNewWordsState({
+        ...newWordsState,
+        [sourceId]: result[0],
+        [targetId]: result[1],
+      });
+    }
+
+    const result = swap(newWordsState[sourceId], sourceIndex, targetIndex);
+    return setNewWordsState({
+      ...newWordsState,
+      [sourceId]: result,
+    });
+  }
+
   return (
-    <DragDropContext
-      onDragEnd={onDragEndHandlerNew}
-      onDragStart={onDradStartHandler}
-    >
-      <DndSectionStyled>
-        {wordsState.rowsOrder.map((rowId: string) => {
-          const row = wordsState.rows[rowId];
-          const words = row.wordIds.map((wordId) => wordsState.words[wordId]);
-          return <DndGroupWords key={row.id} row={row} words={words} />;
-        })}
-      </DndSectionStyled>
-      {isError && <ErrorText>Something wrong!</ErrorText>}
-      <Button clickHandler={checkHandler}>Check</Button>
-    </DragDropContext>
+    <GridContextProvider onChange={onChange}>
+       <DndSectionStyled>
+          <DndGroupWords id={"phrase"} newWords={newWordsState.phrase}/>
+          <DndGroupWords id={"words"} newWords={newWordsState.words}/>
+       </DndSectionStyled>
+    </GridContextProvider>
+    // <DragDropContext
+    //   onDragEnd={onDragEndHandlerNew}
+    //   onDragStart={onDradStartHandler}
+    // >
+    //   <DndSectionStyled>
+    //     {wordsState.rowsOrder.map((rowId: string) => {
+    //       const row = wordsState.rows[rowId];
+    //       const words = row.wordIds.map((wordId) => wordsState.words[wordId]);
+    //       return <DndGroupWords key={row.id} row={row} words={words} />;
+    //     })}
+    //   </DndSectionStyled>
+    //   {isError && <ErrorText>Something wrong!</ErrorText>}
+    //   <Button clickHandler={checkHandler}>Check</Button>
+    // </DragDropContext>
   );
 };
 
 export default DndSection;
+
+interface newIWord {
+  id: number;
+  position: number;
+  content: string;
+}
+
+interface IPhrase {
+  phrase: newIWord[];
+  words: newIWord[];
+}
+
+interface IPhraseOptions {
+  [key:string]: newIWord[];
+}
+
+const dummyData: IPhraseOptions = {
+  phrase: [],
+  words: [
+    { id: 1, position: 1, content: "Hello" },
+    { id: 2, position: 2, content: "my" },
+    { id: 3, position: 3, content: "dear" },
+    { id: 4, position: 4, content: "friend." },
+    { id: 5, position: 5, content: "Cold" },
+    { id: 6, position: 6, content: "day" },
+    { id: 7, position: 7, content: "today" },
+  ],
+};
+

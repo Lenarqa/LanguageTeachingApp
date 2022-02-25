@@ -1,17 +1,18 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
+import {
+  GridItem,
+} from "react-grid-dnd";
+
 import styled from "styled-components";
 import { IWordNew } from "../../models/models";
 
 interface WordItemProps {
-  index: number;
-  word: IWordNew;
+  id: number;
+  content: string;
 }
 
-interface WordItemStyledProps {
-  isDragging: boolean;
-}
 
 const WordItemWrapper = styled.div`
   background: #e6e6e6;
@@ -20,7 +21,7 @@ const WordItemWrapper = styled.div`
   height: 10px;
 `;
 
-const WordItemStyled = styled.div<WordItemStyledProps>`
+const WordItemStyled = styled.div`
   cursor: pointer;
   background: #fff;
   border: 1px solid #c9c9c9;
@@ -31,20 +32,11 @@ const WordItemStyled = styled.div<WordItemStyledProps>`
   margin: 4px 10px 4px 0px;
 `;
 
-const WordItem: React.FC<WordItemProps> = (props) => {
+const WordItem: React.FC<WordItemProps> = (props) => {  
   return (
-    <Draggable draggableId={props.word.id} index={props.index}>
-      {(provided, snapshot) => (
-        <WordItemStyled
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          isDragging={snapshot.isDragging}
-        >
-          {props.word.content}
-        </WordItemStyled>
-      )}
-    </Draggable>
+    <GridItem key={props.id}>
+      <WordItemStyled>{props.content}</WordItemStyled>
+    </GridItem>
   );
 };
 

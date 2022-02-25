@@ -4,46 +4,39 @@ import styled from "styled-components";
 import { IRowNew, IWordNew } from "../../models/models";
 import WordItem from "./WordItem";
 
+import { GridDropZone, GridItem } from "react-grid-dnd";
+
+interface newIWord {
+  id: number;
+  position: number;
+  content: string;
+}
+
 interface DndGroupWordsProps {
-  row: IRowNew;
-  words: IWordNew[];
+  id: string;
+  newWords: newIWord[];
 }
 
 interface DndGroupWordsStyledProps {
-  isDraggingOver: boolean;
-  isPhrase: boolean;
+  id: string;
 }
 
 const DndGroupWordsStyled = styled.div<DndGroupWordsStyledProps>`
-  display: flex;
-  flex-wrap: wrap;
   width: 482px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  min-height: 38px;
+  min-height: 20rem;
   margin-bottom: 10px;
-  background-color: #eee;
-  border-bottom: ${(props) => (props.isPhrase ? "1px solid #4B4B4B;" : "")};
+  background-color: ${props => props.id === "phrase" ? 'red' : "#eee"};
 `;
 
 const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
-  console.log("Hello");
+  console.log(props.newWords);
+
   return (
-    <Droppable droppableId={props.row.id} direction="horizontal">
-      {(provided, snapshot) => (
-        <DndGroupWordsStyled
-          isPhrase={props.row.isPhrase}
-          isDraggingOver={snapshot.isDraggingOver}
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-        >
-          {props.words.map((word, index) => (
-              <WordItem key={word.id} word={word} index={index} />
-          ))}
-          {provided.placeholder}
-        </DndGroupWordsStyled>
-      )}
-    </Droppable>
+      <GridDropZone style={{height: "10rem"}} id={props.id} boxesPerRow={4} rowHeight={70}>
+        {props.newWords.map((word) => (
+          <WordItem key={word.id} id={word.id} content={word.content} />
+        ))}
+      </GridDropZone>
   );
 };
 
