@@ -1,7 +1,9 @@
 export interface IWordNew {
   id: string;
+  wordIndex: number;
   content: string;
 }
+
 
 export interface IRowNew {
   id: string;

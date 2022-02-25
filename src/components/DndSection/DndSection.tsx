@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 import Button from "../UI/Button";
-import DndGroupWordsNew from "./DndGropWordNew";
+import DndGroupWords from "./DndGropWord";
 import { IInitData } from "../../models/models";
 import { WordsContext } from "../../store/words-context";
+import { IRowNew } from "../../models/models";
 
 
 const DndSectionStyled = styled.div`
@@ -48,9 +49,7 @@ const DndSection: React.FC = (props) => {
     const startRow = wordsState.rows[source.droppableId];
 
     const finishRow = wordsState.rows[destination.droppableId];
-    if (finishRow.wordIds.length > 3) {
-      return;
-    }
+    
 
     if (startRow === finishRow) {
       const newWordIds = Array.from(startRow.wordIds);
@@ -72,10 +71,14 @@ const DndSection: React.FC = (props) => {
           },
         };
       });
+      
       return;
     }
 
     //move between rows
+    if (finishRow.wordIds.length > 3) {
+      return;
+    }
     const startWordIds = Array.from(startRow.wordIds);
     startWordIds.splice(source.index, 1);
     const newStart = {
@@ -89,7 +92,7 @@ const DndSection: React.FC = (props) => {
       ...finishRow,
       wordIds: finishWordIds,
     };
-
+    
     const newState = {
       ...wordsState,
       rows: {
@@ -98,8 +101,16 @@ const DndSection: React.FC = (props) => {
         [newFinish.id]: newFinish,
       },
     };
-
+    
     setWordsState(newState);
+
+    // console.log(finishRow);
+    // если перемещаем из строки фразы в 
+    //строку слов то делаем сортировку
+    // if(!finishRow.isPhrase){
+
+    // }
+
   };
 
   const onDradStartHandler = () => {
@@ -159,7 +170,7 @@ const DndSection: React.FC = (props) => {
         {wordsState.rowsOrder.map((rowId: string) => {
           const row = wordsState.rows[rowId];
           const words = row.wordIds.map((wordId) => wordsState.words[wordId]);
-          return <DndGroupWordsNew key={row.id} row={row} words={words} />;
+          return <DndGroupWords key={row.id} row={row} words={words} />;
         })}
       </DndSectionStyled>
       {isError && <ErrorText>Something wrong!</ErrorText>}

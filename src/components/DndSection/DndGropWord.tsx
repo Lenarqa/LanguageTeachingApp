@@ -2,7 +2,7 @@ import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { IRowNew, IWordNew } from "../../models/models";
-import WordItemNew from "./WordItemNew";
+import WordItem from "./WordItem";
 
 interface DndGroupWordsProps {
   row: IRowNew;
@@ -12,7 +12,6 @@ interface DndGroupWordsProps {
 interface DndGroupWordsStyledProps {
   isDraggingOver: boolean;
   isPhrase: boolean;
-//   myDroppableId: string;
 }
 
 const DndGroupWordsStyled = styled.div<DndGroupWordsStyledProps>`
@@ -24,22 +23,21 @@ const DndGroupWordsStyled = styled.div<DndGroupWordsStyledProps>`
   min-height: 38px;
   margin-bottom: 10px;
   background-color: #eee;
-  border-bottom: ${props => props.isPhrase ? "1px solid #4B4B4B;":""};
+  border-bottom: ${(props) => (props.isPhrase ? "1px solid #4B4B4B;" : "")};
 `;
 
-const DndGroupWordsNew: React.FC<DndGroupWordsProps> = (props) => {
+const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
   return (
     <Droppable droppableId={props.row.id} direction="horizontal">
       {(provided, snapshot) => (
         <DndGroupWordsStyled
-            isPhrase={props.row.isPhrase}
-        //   myDroppableId={props.row.id}
+          isPhrase={props.row.isPhrase}
           isDraggingOver={snapshot.isDraggingOver}
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
           {props.words.map((word, index) => (
-            <WordItemNew key={word.id} word={word} index={index} />
+              <WordItem key={word.id} word={word} index={index} />
           ))}
           {provided.placeholder}
         </DndGroupWordsStyled>
@@ -48,4 +46,4 @@ const DndGroupWordsNew: React.FC<DndGroupWordsProps> = (props) => {
   );
 };
 
-export default DndGroupWordsNew;
+export default DndGroupWords;

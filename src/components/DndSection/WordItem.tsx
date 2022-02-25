@@ -13,6 +13,13 @@ interface WordItemStyledProps {
   isDragging: boolean;
 }
 
+const WordItemWrapper = styled.div`
+  background: #e6e6e6;
+  box-shadow: inset 0px 8px 4px -6px rgba(0, 0, 0, 0.25);
+  width: 30px;
+  height: 10px;
+`;
+
 const WordItemStyled = styled.div<WordItemStyledProps>`
   cursor: pointer;
   background: #fff;
@@ -24,7 +31,7 @@ const WordItemStyled = styled.div<WordItemStyledProps>`
   margin: 4px 10px 4px 0px;
 `;
 
-const WordItemNew: React.FC<WordItemProps> = (props) => {
+const WordItem: React.FC<WordItemProps> = (props) => {
   return (
     <Draggable draggableId={props.word.id} index={props.index}>
       {(provided, snapshot) => (
@@ -41,4 +48,4 @@ const WordItemNew: React.FC<WordItemProps> = (props) => {
   );
 };
 
-export default WordItemNew;
+export default WordItem;

@@ -43,7 +43,11 @@ const WordsContextProvider: React.FC = (props) => {
       for (let i = 0; i < wordEn.length; i++) {
         let newWord: { [key: string]: IWordNew } = {};
         for (let j = 0; j < wordEn[i].length; j++) {
-          newWord[`word-${j}`] = { id: `word-${j}`, content: wordEn[i][j] };
+          newWord[`word-${j}`] = {
+            id: `word-${j}`,
+            wordIndex: 1,
+            content: wordEn[i][j],
+          };
         }
         words.push(newWord);
       }
@@ -92,6 +96,13 @@ const WordsContextProvider: React.FC = (props) => {
         }
       }
 
+      //назначаем каждому слову wordIndex для сортировки
+      for (let i = 0; i < words.length; i++) {
+        for (let j = 0; j < Object.keys(words[i]).length; j++) {
+          words[i][`word-${j}`].wordIndex = j;
+        }
+      }
+
       let rows: {
         [key: string]: {
           [key: string]: IRowNew;
@@ -122,7 +133,6 @@ const WordsContextProvider: React.FC = (props) => {
 
         rows[`row-${i}`] = newRow;
       }
-      
 
       //create rowsOrder
       let rowsOrder = [];
