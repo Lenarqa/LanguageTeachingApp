@@ -4,19 +4,16 @@ import styled from "styled-components";
 import Button from "../UI/Button";
 import DndGroupWords from "./DndGropWord";
 import { WordsContext } from "../../store/words-context";
-import IPhrase from "../../models/models";
 
-import {
-  GridContextProvider,
-  swap,
-  move,
-} from "react-grid-dnd";
+import { GridContextProvider, swap, move } from "react-grid-dnd";
 
 const DndSectionStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-bottom: 79px;
+  width: 100%;
+  max-width: 465px;
 `;
 
 const ErrorText = styled.div`
@@ -31,37 +28,28 @@ const ErrorText = styled.div`
 
 const DndSection: React.FC = (props) => {
   const wordsCtx = useContext(WordsContext);
-
   const [isError, setIsError] = useState<boolean>(false);
 
-  const [newWordsState, setNewWordsState] = useState<IPhrase>(dummyData);
-
   const checkHandler = () => {
-    // составляем из слов предложение
-    let userPhrase = newWordsState["phrase"].map(word => word.content).join(' ');
+    let userPhrase = wordsCtx.curPhrase.phrase["phrase"]
+      .map((word) => word.content)
+      .join(" ");
 
-    console.log(userPhrase);
+    if (userPhrase === wordsCtx.curPhrase.en) {
+      let synth = window.speechSynthesis;
+      var utterThis = new SpeechSynthesisUtterance(userPhrase);
+      synth.speak(utterThis);
 
-    let synth = window.speechSynthesis;
-    var utterThis = new SpeechSynthesisUtterance(userPhrase);
-    synth.speak(utterThis);
-
-    // if (userPhrase === wordsState.en) {
-    //   let synth = window.speechSynthesis;
-    //   var utterThis = new SpeechSynthesisUtterance(userPhrase);
-    //   synth.speak(utterThis);
-
-    //   // timeout перед тем как поменять фразу
-    //   //изходя из длинны сообщения
-    //   utterThis.onend = function (event) {
-    //     // setTimeout(() => {
-    //     //   let newState: IInitData = wordsCtx.changeWord();
-    //     //   setWordsState(newState);
-    //     // }, event.elapsedTime);
-    //   };
-    // } else {
-    //   setIsError(true);
-    // }
+      // timeout перед тем как поменять фразу
+      //изходя из длинны сообщения
+      utterThis.onend = function (event) {
+        setTimeout(() => {
+          wordsCtx.changeWord();
+        }, event.elapsedTime);
+      };
+    } else {
+      setIsError(true);
+    }
   };
 
   function onChange(
@@ -70,49 +58,53 @@ const DndSection: React.FC = (props) => {
     targetIndex: number,
     targetId?: string | undefined
   ) {
+    setIsError(false);
     if (targetId) {
       const result = move(
-        newWordsState[sourceId],
-        newWordsState[targetId],
+        wordsCtx.curPhrase.phrase[sourceId],
+        wordsCtx.curPhrase.phrase[targetId],
         sourceIndex,
         targetIndex
       );
-      return setNewWordsState({
-        ...newWordsState,
-        [sourceId]: result[0],
-        [targetId]: result[1],
-      });
+      return wordsCtx.setCurPhrase((prev) => ({
+        ...prev,
+        phrase: {
+          [sourceId]: result[0],
+          [targetId]: result[1],
+        },
+      }));
     }
 
-    const result = swap(newWordsState[sourceId], sourceIndex, targetIndex);
-    return setNewWordsState({
-      ...newWordsState,
-      [sourceId]: result,
-    });
+    const result = swap(
+      wordsCtx.curPhrase.phrase[sourceId],
+      sourceIndex,
+      targetIndex
+    );
+    return wordsCtx.setCurPhrase((prev) => ({
+      ...prev,
+      phrase: {
+        ...prev.phrase,
+        [sourceId]: result,
+      },
+    }));
   }
 
   return (
-    <GridContextProvider onChange={onChange}>
-      <DndSectionStyled>
-        <DndGroupWords id={"phrase"} newWords={newWordsState.phrase} />
-        <DndGroupWords id={"words"} newWords={newWordsState.words} />
+    <DndSectionStyled>
+      <GridContextProvider onChange={onChange}>
+        <DndGroupWords
+          id={"phrase"}
+          newWords={wordsCtx.curPhrase.phrase.phrase}
+        />
+        <DndGroupWords
+          id={"words"}
+          newWords={wordsCtx.curPhrase.phrase.words}
+        />
+        {isError && <ErrorText>Something wrong!</ErrorText>}
         <Button clickHandler={checkHandler}>Check</Button>
-      </DndSectionStyled>
-    </GridContextProvider>
+      </GridContextProvider>
+    </DndSectionStyled>
   );
 };
 
 export default DndSection;
-
-const dummyData: IPhrase = {
-  phrase: [],
-  words: [
-    { id: 1, position: 1, content: "Hello" },
-    { id: 2, position: 2, content: "my" },
-    { id: 3, position: 3, content: "dear" },
-    { id: 4, position: 4, content: "friend." },
-    { id: 5, position: 5, content: "Cold" },
-    { id: 6, position: 6, content: "day" },
-    { id: 7, position: 7, content: "today" },
-  ],
-};

@@ -1,18 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import WordItem from "./WordItem";
+import { IWord } from "../../models/models";
 
-import { GridDropZone, GridItem } from "react-grid-dnd";
-
-interface newIWord {
-  id: number;
-  position: number;
-  content: string;
-}
+import { GridDropZone } from "react-grid-dnd";
 
 interface DndGroupWordsProps {
   id: string;
-  newWords: newIWord[];
+  newWords: IWord[];
 }
 
 interface DndGroupWordsStyledProps {
@@ -28,7 +23,7 @@ const DndGroupWordsStyled = styled.div<DndGroupWordsStyledProps>`
 
 const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
   return (
-      <GridDropZone style={{height: "10rem"}} id={props.id} boxesPerRow={4} rowHeight={70}>
+      <GridDropZone style={{height: "10rem", width:"100%"}} id={props.id} boxesPerRow={5} rowHeight={70} >
         {props.newWords.map((word) => (
           <WordItem key={word.id} id={word.id} content={word.content} />
         ))}

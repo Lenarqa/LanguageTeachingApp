@@ -17,7 +17,7 @@ const ShowText: React.FC = (props) => {
   return (
     <ShowTextDiv>
       <User />
-      {!wordsCtx.isLoading && <TextSection items={["hello", "my", "friend"]}/>}
+      {!wordsCtx.isLoading && <TextSection items={wordsCtx.curPhrase.ru.split(" ")}/>}
     </ShowTextDiv>
   );
 };

@@ -1,11 +1,15 @@
-interface IWord {
+export interface IWord {
   id: number;
   position: number;
   content: string;
 }
 
-interface IPhrase {
+export interface IPhrase {
   [key: string]: IWord[];
 }
 
-export default IPhrase;
+export interface IPhraseData {
+  ru: string;
+  en: string;
+  phrase:IPhrase;
+}
