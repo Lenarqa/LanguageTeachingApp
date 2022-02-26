@@ -1,17 +1,13 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 import Button from "../UI/Button";
 import DndGroupWords from "./DndGropWord";
-import { IInitData } from "../../models/models";
 import { WordsContext } from "../../store/words-context";
-import { IRowNew } from "../../models/models";
+import IPhrase from "../../models/models";
 
 import {
   GridContextProvider,
-  GridDropZone,
-  GridItem,
   swap,
   move,
 } from "react-grid-dnd";
@@ -36,10 +32,9 @@ const ErrorText = styled.div`
 const DndSection: React.FC = (props) => {
   const wordsCtx = useContext(WordsContext);
 
-  const [wordsState, setWordsState] = useState<IInitData>(wordsCtx.curWordData);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const [newWordsState, setNewWordsState] = useState<IPhraseOptions>(dummyData);
+  const [newWordsState, setNewWordsState] = useState<IPhrase>(dummyData);
 
   const checkHandler = () => {
     // составляем из слов предложение
@@ -109,22 +104,7 @@ const DndSection: React.FC = (props) => {
 
 export default DndSection;
 
-interface newIWord {
-  id: number;
-  position: number;
-  content: string;
-}
-
-interface IPhrase {
-  phrase: newIWord[];
-  words: newIWord[];
-}
-
-interface IPhraseOptions {
-  [key: string]: newIWord[];
-}
-
-const dummyData: IPhraseOptions = {
+const dummyData: IPhrase = {
   phrase: [],
   words: [
     { id: 1, position: 1, content: "Hello" },

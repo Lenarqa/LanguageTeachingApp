@@ -1,20 +1,11 @@
-export interface IWordNew {
-  id: string;
-  wordIndex: number;
+interface IWord {
+  id: number;
+  position: number;
   content: string;
 }
 
-
-export interface IRowNew {
-  id: string;
-  isPhrase: boolean;
-  wordIds: string[];
+interface IPhrase {
+  [key: string]: IWord[];
 }
 
-export interface IInitData {
-  words: { [key in string]: IWordNew };
-  rows: { [key in string]: IRowNew };
-  rowsOrder: string[];
-  ru: string;
-  en:string;
-}
+export default IPhrase;

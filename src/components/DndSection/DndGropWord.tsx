@@ -1,7 +1,5 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { IRowNew, IWordNew } from "../../models/models";
 import WordItem from "./WordItem";
 
 import { GridDropZone, GridItem } from "react-grid-dnd";

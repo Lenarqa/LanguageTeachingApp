@@ -1,12 +1,10 @@
 import React from "react";
-import { Draggable } from "react-beautiful-dnd";
 
 import {
   GridItem,
 } from "react-grid-dnd";
 
 import styled from "styled-components";
-import { IWordNew } from "../../models/models";
 
 interface WordItemProps {
   id: number;

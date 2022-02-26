@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { IInitData, IRowNew, IWordNew } from "../models/models";
 
 const SENTENCE_QUERY = `
 {
@@ -12,151 +11,18 @@ const SENTENCE_QUERY = `
 
 type contextObject = {
   isLoading: boolean;
-  changeWord: () => IInitData;
-  curWordData: IInitData;
-  setCurWordData: (item: IInitData) => void;
-};
-
-const initObj = {
-  words: {},
-  rows: {},
-  rowsOrder: [],
-  ru: "init",
-  en: "init en",
+  changeWord: () => void;
 };
 
 export const WordsContext = React.createContext<contextObject>({
   isLoading: true,
-  changeWord: () => initObj,
-  curWordData: initObj,
-  setCurWordData: (prevState: IInitData) => {},
+  changeWord: () => {},
 });
 
 const WordsContextProvider: React.FC = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [wordsData, setWordsData] = useState<IInitData[]>([]);
-  const [curWordData, setCurWordData] = useState<IInitData>(initObj);
 
-  const createStructure = useCallback(
-    (enSentences: string[], sentences: string[], wordEn: string[]) => {
-      let words = [];
-      for (let i = 0; i < wordEn.length; i++) {
-        let newWord: { [key: string]: IWordNew } = {};
-        for (let j = 0; j < wordEn[i].length; j++) {
-          newWord[`word-${j}`] = {
-            id: `word-${j}`,
-            wordIndex: 1,
-            content: wordEn[i][j],
-          };
-        }
-        words.push(newWord);
-      }
-
-      //create rows
-      const rowCount: number[] = [];
-      for (let i = 0; i < wordEn.length; i++) {
-        //в каждой строке будет по 4 слова
-        //округляем в большую сторону и умножаем на 2
-        //(строки куда вставлять слова и строки с начальным набором слов)
-        rowCount[i] = Math.ceil(wordEn[i].length / 4) * 2;
-      }
-
-      let wordIds = [];
-      for (let i = 0; i < words.length; i++) {
-        wordIds[i] = Object.keys(words[i]);
-      }
-
-      //делим этот массив на подмассивы по 4 шт, в каждой строке будут свои 4 слова
-      let size = 4; //размер подмассива
-      let subWordIds = [];
-      for (let i = 0; i < wordIds.length; i++) {
-        let subarray = [];
-        for (let j = 0; j < Math.ceil(wordIds[i].length / size); j++) {
-          subarray[j] = wordIds[i].slice(j * size, j * size + size);
-        }
-        subWordIds.push(subarray);
-      }
-
-      // дополнительная функция для перемешивания слов в массиве
-      function shuffle(arr: string[]) {
-        for (var i = 0; i < arr.length; i++) {
-          var j = Math.floor(Math.random() * Math.floor(arr.length));
-          var k = Math.floor(Math.random() * Math.floor(arr.length));
-          var t = arr[j];
-          arr[j] = arr[k];
-          arr[k] = t;
-        }
-        return arr;
-      }
-
-      // перемешиваем слова в строке
-      for (let i = 0; i < subWordIds.length; i++) {
-        for (let j = 0; j < subWordIds[i].length; j++) {
-          subWordIds[i][j] = shuffle(subWordIds[i][j]);
-        }
-      }
-
-      //назначаем каждому слову wordIndex для сортировки
-      for (let i = 0; i < words.length; i++) {
-        for (let j = 0; j < Object.keys(words[i]).length; j++) {
-          words[i][`word-${j}`].wordIndex = j;
-        }
-      }
-
-      let rows: {
-        [key: string]: {
-          [key: string]: IRowNew;
-        };
-      } = {};
-      let curWordIndex: number = 0;
-      for (let i = 0; i < rowCount.length; i++) {
-        let curSubIndex: number = 0;
-        //   получаем массив ключей к слову
-        let newRow: { [key: string]: IRowNew } = {};
-        for (let j = 0; j < rowCount[i]; j++) {
-          if (j < rowCount[i] / 2) {
-            newRow[`row-${j}`] = {
-              id: `row-${j}`,
-              isPhrase: true,
-              wordIds: [],
-            };
-          } else {
-            newRow[`row-${j}`] = {
-              id: `row-${j}`,
-              isPhrase: false,
-              wordIds: subWordIds[curWordIndex][curSubIndex],
-            };
-            curSubIndex++;
-          }
-        }
-        curWordIndex++;
-
-        rows[`row-${i}`] = newRow;
-      }
-
-      //create rowsOrder
-      let rowsOrder = [];
-      let rowsKeys = Object.keys(rows);
-      for (let i = 0; i < rowsKeys.length; i++) {
-        rowsOrder[i] = Object.keys(rows[rowsKeys[i]]);
-      }
-
-      let initData: IInitData[] = [];
-      for (let i = 0; i < wordEn.length; i++) {
-        let initDataItem: IInitData = {
-          words: words[i],
-          rows: rows[`row-${i}`],
-          rowsOrder: rowsOrder[i],
-          ru: sentences[i],
-          en: enSentences[i],
-        };
-        initData.push(initDataItem);
-      }
-
-      return initData;
-    },
-    []
-  );
+  
 
   useEffect(() => {
     setIsLoading(true);
@@ -178,36 +44,28 @@ const WordsContextProvider: React.FC = (props) => {
           wordsEn[i] = sentenceAll[i].en.split(" ");
         }
 
-        let initData = createStructure(enSentences, ruSentences, wordsEn);
-        setWordsData(initData);
-        let randomWordIndex: number = Math.floor(
-          Math.random() * initData.length
-        );
-
-        setCurWordData(initData[randomWordIndex]);
-
         setIsLoading(false);
       });
-  }, [createStructure]);
+  }, []);
 
   const changeWordHandler = () => {
     console.log("change word handler");
-    let randomWordIndex: number = Math.floor(Math.random() * wordsData.length);
-    setCurWordData(wordsData[randomWordIndex]);
-    return wordsData[randomWordIndex];
+    // let randomWordIndex: number = Math.floor(Math.random() * wordsData.length);
+    // setCurWordData(wordsData[randomWordIndex]);
+    // return wordsData[randomWordIndex];
   };
 
   const setCurWordDataHandler = () => {
-    let randomWordIndex: number = Math.floor(Math.random() * wordsData.length);
-    setCurWordData(wordsData[randomWordIndex]);
-    return wordsData[randomWordIndex];
+    console.log("setCurWordDataHandler");
+    
+    // let randomWordIndex: number = Math.floor(Math.random() * wordsData.length);
+    // setCurWordData(wordsData[randomWordIndex]);
+    // return wordsData[randomWordIndex];
   };
 
   const contextValue = {
     isLoading: isLoading,
-    changeWord: changeWordHandler,
-    curWordData: curWordData,
-    setCurWordData: setCurWordData,
+    changeWord: changeWordHandler
   };
 
   return (
