@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 
 import Button from "../UI/Button";
@@ -12,8 +12,7 @@ const DndSectionStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-bottom: 79px;
-  width: 100%;
-  max-width: 465px;
+  width: 465px;
 `;
 
 const ErrorText = styled.div`
@@ -29,6 +28,20 @@ const ErrorText = styled.div`
 const DndSection: React.FC = (props) => {
   const wordsCtx = useContext(WordsContext);
   const [isError, setIsError] = useState<boolean>(false);
+  const [isSorting, setIsSorting] = useState<boolean>(false);
+
+  useEffect(()=>{
+    setTimeout(() => {
+      wordsCtx.setCurPhrase((prev) => {
+        prev.phrase.words.sort((a, b) => a.position - b.position);
+        return prev;
+      });
+      setIsSorting(true);
+      setTimeout(()=>{
+        setIsSorting(false);
+      }, 1000)
+    }, 1000);
+  },[wordsCtx]);
 
   const checkHandler = () => {
     let userPhrase = wordsCtx.curPhrase.phrase["phrase"]

@@ -9,20 +9,22 @@ interface DndGroupWordsProps {
   newWords: IWord[];
 }
 
-interface DndGroupWordsStyledProps {
-  id: string;
-}
-
 const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
   const wordsCtx = useContext(WordsContext)
+  let maxLength = 0;
   let style = {};
-  let rowHeight = Math.ceil((wordsCtx.curPhrase.phrase.words.length / 5)) * 45;
-  console.log(rowHeight);
+
+  // if(wordsCtx.curPhrase.phrase.words.length > wordsCtx.curPhrase.phrase.phrase.length) {
+  //   maxLength = wordsCtx.curPhrase.phrase.words.length;
+  // }else {
+  //   maxLength = wordsCtx.curPhrase.phrase.phrase.length;
+  // }
+  // let rowHeight = Math.ceil(( maxLength/ 5)) * 45;
   
   if(props.id === "phrase") {
     style = {
       width: "100%",
-      height: `${rowHeight}px`,
+      height: `90px`,
       backgroundImage:
         "linear-gradient(rgba(75, 75, 75, 1),rgba(75, 75, 75, 1) 5%, transparent 5%, transparent)",
       backgroundSize: "100% 40px",
@@ -30,8 +32,8 @@ const DndGroupWords: React.FC<DndGroupWordsProps> = (props) => {
   }else {
     style = {
       width: "100%",
-      height: `${rowHeight}px`,
-      marginBottom: "79px",
+      height: `90px`,
+      marginBottom: "20px",
     }
   }
   

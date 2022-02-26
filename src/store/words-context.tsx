@@ -34,12 +34,14 @@ const WordsContextProvider: React.FC = (props) => {
     const enSentences: string[] = [];
     let wordsEn: string[] = [];
 
+    //create ru and en sentences arrays
     for (let i = 0; i < sentenceAll.length; i++) {
       ruSentences[i] = sentenceAll[i].ru;
       enSentences[i] = sentenceAll[i].en;
       wordsEn[i] = sentenceAll[i].en.split(" ");
     }
 
+    //create en words arrays as IWord
     let wordsData = [];
     for (let i = 0; i < wordsEn.length; i++) {
       let tempWordData: IWord[] = [];
@@ -47,6 +49,19 @@ const WordsContextProvider: React.FC = (props) => {
         tempWordData[j] = { id: j, position: 0, content: wordsEn[i][j] };
       }
       wordsData.push(tempWordData);
+    }
+
+    // sorting words
+    for (let i = 0; i < wordsData.length; i++) {
+      wordsData[i] = wordsData[i].sort(() => Math.random() - 0.5);
+    }
+
+    // remember the position
+    for (let i = 0; i < wordsData.length; i++) {
+      wordsData[i] = wordsData[i].map((item, index) => {
+        item.position = index;
+        return item;
+      });
     }
 
     let structuredData = [];
@@ -60,6 +75,7 @@ const WordsContextProvider: React.FC = (props) => {
         },
       });
     }
+
     return structuredData;
   }, []);
 
@@ -87,7 +103,6 @@ const WordsContextProvider: React.FC = (props) => {
   }, [createStructure]);
 
   const changeWordHandler = () => {
-    console.log("change word handler");
     let randomWordIndex: number = Math.floor(Math.random() * phraseData.length);
     setCurPhrase(phraseData[randomWordIndex]);
   };
