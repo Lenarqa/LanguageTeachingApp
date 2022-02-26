@@ -55,7 +55,7 @@ const WordsContextProvider: React.FC = (props) => {
     for (let i = 0; i < wordsData.length; i++) {
       wordsData[i] = wordsData[i].sort(() => Math.random() - 0.5);
     }
-
+    
     // remember the position
     for (let i = 0; i < wordsData.length; i++) {
       wordsData[i] = wordsData[i].map((item, index) => {
@@ -75,7 +75,6 @@ const WordsContextProvider: React.FC = (props) => {
         },
       });
     }
-
     return structuredData;
   }, []);
 
