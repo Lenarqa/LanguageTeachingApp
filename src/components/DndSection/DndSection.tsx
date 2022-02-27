@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
-import { IWord } from "../../models/models";
 import Button from "../UI/Button";
 import DndGroupWords from "./DndGropWord";
 import { WordsContext } from "../../store/words-context";
+import { Transition } from 'react-transition-group';
 
 import { GridContextProvider, swap, move } from "react-grid-dnd";
 
@@ -17,18 +17,22 @@ const DndSectionStyled = styled.div`
   z-index: 1;
 `;
 
-const GridTestWrapper = styled.div`
-  /* background-color: lightblue; */
+interface GridTestWrapperProps {
+  phraseLength: number;
+}
+
+const GridTestWrapper = styled.div<GridTestWrapperProps>`
   position: absolute;
-  top: 51%;
+  top: ${(props) => `${Math.ceil(props.phraseLength / 5)*45}px`};
   left: 0;
   width: 465px;
   height: 90px;
   display: grid;
-  transform: translateY(-51%);
+  transform: ${(props) => `-${Math.ceil(props.phraseLength / 5)*45}px`};
   grid-template-columns: repeat(5, 1fr);
   grid-row-gap: 1fr;
   z-index: -1;
+  margin-bottom: 20px;
 `;
 
 const WordItemWrapper = styled.div`
@@ -42,14 +46,20 @@ const WordItemWrapper = styled.div`
   height: 26px;
 `;
 
-const ErrorText = styled.div`
+interface ErrorTextProps {
+  state: string;
+}
+
+const ErrorText = styled.div<ErrorTextProps>`
   font-size: 24px;
   font-weight: 400;
   color: #ff0000;
   max-width: 465px;
   text-align: center;
-  margin-bottom: 27px;
   text-shadow: -1px -2px 2px #ffffff, 1px 2px 2px rgba(91, 13, 13, 0.5);
+  transition: all 1s ease-in-out;
+  opacity: ${props => props.state === "entering" || props.state === "entered" ? 1 : 0};
+  margin-bottom: ${props => props.state === "entering" || props.state === "entered" ? "27px" : 0};;
 `;
 
 const DndSection: React.FC = (props) => {
@@ -136,6 +146,13 @@ const DndSection: React.FC = (props) => {
     bgContent.push(<WordItemWrapper key={i} />);
   }
 
+  const transitionStyles = {
+    entering: { opacity: 1 },
+    entered:  { opacity: 1 },
+    exiting:  { opacity: 0 },
+    exited:  { opacity: 0 },
+  };
+
   return (
     <DndSectionStyled>
       <GridContextProvider onChange={onChange}>
@@ -149,14 +166,21 @@ const DndSection: React.FC = (props) => {
         />
       </GridContextProvider>
 
-      <GridTestWrapper>
+      <GridTestWrapper phraseLength={wordsCtx.curPhrase.phraseLength}>
         {bgContent}
       </GridTestWrapper>
-
-      {isError && <ErrorText>Something wrong!</ErrorText>}
+      <Transition in={isError} timeout={1000}>
+        {state => (
+          <ErrorText state={state}>Something wrong!</ErrorText>
+        )}
+      </Transition>
       <Button clickHandler={checkHandler}>Check</Button>
     </DndSectionStyled>
   );
 };
+
+const ErrorTextWrapper = styled.div`
+  height: 112px;
+`
 
 export default DndSection;
