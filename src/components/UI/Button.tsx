@@ -52,10 +52,6 @@ const ButtonStyled = styled.button<ButtonStyledProps>`
   &:hover::after {
     opacity: 0;
   }
-
-  /* &:hover {
-    box-shadow: 
-  } */
 `;
 
 interface ButtonProps {
