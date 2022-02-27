@@ -12,4 +12,5 @@ export interface IPhraseData {
   ru: string;
   en: string;
   phrase:IPhrase;
+  phraseLength: number;
 }

@@ -73,6 +73,7 @@ const WordsContextProvider: React.FC = (props) => {
           phrase: [],
           words: wordsData[i],
         },
+        phraseLength: wordsData[i].length,
       });
     }
     return structuredData;

@@ -20,26 +20,26 @@ const DndSectionStyled = styled.div`
 const GridTestWrapper = styled.div`
   /* background-color: lightblue; */
   position: absolute;
-  top: 50%;
+  top: 51%;
   left: 0;
   width: 465px;
   height: 90px;
   display: grid;
-  transform: translateY(-50%);
+  transform: translateY(-51%);
   grid-template-columns: repeat(5, 1fr);
+  grid-row-gap: 1fr;
   z-index: -1;
 `;
 
 const WordItemWrapper = styled.div`
-  /* background: #e6e6e6; */
-  background-color: red;
+  background-color: rgba(229, 229, 229, 1);
+  box-shadow: inset 0px 8px 4px -6px rgba(0, 0, 0, 0.25);
   z-index: -1;
   border-radius: 13px;
   padding: 4px 18px 5px 18px;
   margin: 4px 10px 4px 0px;
   width: 78px;
   height: 26px;
-  /* box-shadow: inset 0px 8px 4px -6px rgba(0, 0, 0, 0.25); */
 `;
 
 const ErrorText = styled.div`
@@ -63,6 +63,7 @@ const DndSection: React.FC = (props) => {
     setBgItems(JSON.parse(JSON.stringify(wordsCtx.curPhrase.phrase.words)));
   }, []);
 
+  // сортировка с задержкой
   useEffect(() => {
     setTimeout(() => {
       wordsCtx.setCurPhrase((prev) => {
@@ -135,6 +136,12 @@ const DndSection: React.FC = (props) => {
     }));
   }
 
+  // create bg items
+  let bgContent = [];
+  for (let i = 0; i < wordsCtx.curPhrase.phraseLength; i++) {
+    bgContent.push(<WordItemWrapper key={i} />);
+  }
+
   return (
     <DndSectionStyled>
       <GridContextProvider onChange={onChange}>
@@ -149,9 +156,7 @@ const DndSection: React.FC = (props) => {
       </GridContextProvider>
 
       <GridTestWrapper>
-        {bgItems.map((item, index) => (
-          <WordItemWrapper key={index} />
-        ))}
+        {bgContent}
       </GridTestWrapper>
 
       {isError && <ErrorText>Something wrong!</ErrorText>}
