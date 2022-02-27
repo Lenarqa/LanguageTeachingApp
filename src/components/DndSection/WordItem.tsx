@@ -18,6 +18,10 @@ const WordItemStyled = styled.div`
   padding: 4px 18px 5px 18px;
   margin: 4px 10px 4px 0px;
   text-align: center;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 `;
 
 const WordItem: React.FC<WordItemProps> = (props) => {

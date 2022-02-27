@@ -57,12 +57,6 @@ const DndSection: React.FC = (props) => {
   const [isError, setIsError] = useState<boolean>(false);
   const [isSorting, setIsSorting] = useState<boolean>(false);
 
-  const [bgItems, setBgItems] = useState<IWord[]>([] as IWord[]);
-  useEffect(() => {
-    // глубокое копирование.
-    setBgItems(JSON.parse(JSON.stringify(wordsCtx.curPhrase.phrase.words)));
-  }, []);
-
   // сортировка с задержкой
   useEffect(() => {
     setTimeout(() => {
