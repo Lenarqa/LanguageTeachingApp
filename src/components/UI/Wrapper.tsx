@@ -9,7 +9,7 @@ const WrapperStyle = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: #e5e5e5;
+  background-color: rgb(245, 245, 245);
 `;
 
 const Wrapper: React.FC = (props) => {

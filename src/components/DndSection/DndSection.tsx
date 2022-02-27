@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Button from "../UI/Button";
 import DndGroupWords from "./DndGropWord";
 import { WordsContext } from "../../store/words-context";
-import { Transition } from 'react-transition-group';
+import { Transition } from "react-transition-group";
 import { GridContextProvider, swap, move } from "react-grid-dnd";
 import Error from "../UI/Error";
 
@@ -21,22 +21,22 @@ interface BgWordItemsProps {
   phraseLength: number;
 }
 
-const BgWordItems = styled.div<BgWordItemsProps>`
+const BgWordItemsWrapper = styled.div<BgWordItemsProps>`
   position: absolute;
-  top: ${(props) => `${Math.ceil(props.phraseLength / 5)*45}px`};
+  top: ${(props) => `${Math.ceil(props.phraseLength / 5) * 45}px`};
   left: 0;
   width: 465px;
   height: 90px;
   display: grid;
-  transform: ${(props) => `-${Math.ceil(props.phraseLength / 5)*45}px`};
+  transform: ${(props) => `-${Math.ceil(props.phraseLength / 5) * 45}px`};
   grid-template-columns: repeat(5, 1fr);
   grid-row-gap: 1fr;
   z-index: -1;
   margin-bottom: 20px;
 `;
 
-const WordItemWrapper = styled.div`
-  background-color: rgba(229, 229, 229, 1);
+const BgWordItem = styled.div`
+  background-color: #e6e6e6;
   box-shadow: inset 0px 8px 4px -6px rgba(0, 0, 0, 0.25);
   z-index: -1;
   border-radius: 13px;
@@ -46,19 +46,16 @@ const WordItemWrapper = styled.div`
   height: 26px;
 `;
 
-
 const DndSection: React.FC = (props) => {
   const wordsCtx = useContext(WordsContext);
   const [isError, setIsError] = useState<boolean>(false);
   const [isSorting, setIsSorting] = useState<boolean>(false);
   const [isDisableBtn, setIsDisableBtn] = useState<boolean>(true);
 
-  
   useEffect(() => {
-    
-    if(wordsCtx.curPhrase.phrase.phrase.length > 0) {
+    if (wordsCtx.curPhrase.phrase.phrase.length > 0) {
       setIsDisableBtn(false);
-    }else{
+    } else {
       setIsDisableBtn(true);
     }
 
@@ -137,7 +134,7 @@ const DndSection: React.FC = (props) => {
   // create bg word items
   let bgContent = [];
   for (let i = 0; i < wordsCtx.curPhrase.phraseLength; i++) {
-    bgContent.push(<WordItemWrapper key={i} />);
+    bgContent.push(<BgWordItem key={i} />);
   }
 
   return (
@@ -153,18 +150,18 @@ const DndSection: React.FC = (props) => {
         />
       </GridContextProvider>
 
-      <BgWordItems phraseLength={wordsCtx.curPhrase.phraseLength}>
+      <BgWordItemsWrapper phraseLength={wordsCtx.curPhrase.phraseLength}>
         {bgContent}
-      </BgWordItems>
+      </BgWordItemsWrapper>
       <Transition in={isError} timeout={1000}>
-        {state => (
-          <Error state={state}>Something wrong!</Error>
-        )}
+        {(state) => <Error state={state}>Something wrong!</Error>}
       </Transition>
-      <Button isActive={isDisableBtn} clickHandler={checkHandler}>Check</Button>
+
+      <Button isActive={isDisableBtn} clickHandler={checkHandler}>
+        Check
+      </Button>
     </DndSectionStyled>
   );
 };
-
 
 export default DndSection;

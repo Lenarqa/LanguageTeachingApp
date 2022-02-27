@@ -2,15 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import TextItem from "./TextItem";
 
-const myBorderColor = "#252525";
+// const myBorderColor = 
+interface TextSectionStyleProps {
+  myBorderColor: string;
+}
 
-const TextSectionStyle = styled.div`
+const TextSectionStyle = styled.div<TextSectionStyleProps>`
   position: relative;
   max-width: 60%;
   height: 100%;
   padding: 1rem;
   margin-left: 1rem;
-  border: 2px solid ${myBorderColor};
+  border: ${props =>  `2px solid ${props.myBorderColor}`};
   border-radius: 10px;
 
   display: flex;
@@ -24,9 +27,9 @@ const TextSectionStyle = styled.div`
     width: 0;
     height: 0;
     left: -19px;
-    bottom: 8px;
-    border: 10px solid;
-    border-color: ${myBorderColor} transparent transparent ${myBorderColor};
+    top: 49px;
+    border: 9px solid;
+    border-color: ${props => `${props.myBorderColor} transparent transparent ${props.myBorderColor}`};
     transform: rotate(180deg);
   }
 
@@ -36,9 +39,9 @@ const TextSectionStyle = styled.div`
     width: 0;
     height: 0;
     left: -14px;
-    bottom: 10px;
+    top: 48px;
     border: 8px solid;
-    border-color: #E5E5E5 transparent transparent #E5E5E5;;
+    border-color: #f5f5f5 transparent transparent #f5f5f5; 
     transform: rotate(180deg);
   }
 `;
@@ -49,7 +52,7 @@ interface TextSectionProps {
 
 const TextSection: React.FC<TextSectionProps> = (props) => {
   return (
-      <TextSectionStyle>
+      <TextSectionStyle myBorderColor={"#252525"}>
         {props.items.map((word:string, index) => <TextItem key={index}>{word}</TextItem>)}
       </TextSectionStyle>
   );
