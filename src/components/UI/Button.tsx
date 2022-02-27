@@ -2,10 +2,15 @@ import React from "react";
 import styled from "styled-components";
 
 interface ButtonProps {
+  isActive: boolean;
   clickHandler: () => void;
 }
 
-const ButtonStyled = styled.button`
+interface ButtonStyledProps {
+  isActive:boolean;
+}
+
+const ButtonStyled = styled.button<ButtonStyledProps>`
   cursor: pointer;
   padding: 23px 209px 24px 210px;
   font-size: 18px;
@@ -14,7 +19,8 @@ const ButtonStyled = styled.button`
   border: none;
   border-radius: 88px;
   text-align: center;
-  transition: all 3s ease;
+  color: ${props => props.isActive ? "#8c7878" : "black"};
+  transition: all 1s ease;
   
   &:hover {
     background: linear-gradient(91.2deg, #FFFFFF 0%, #F2F2F2 100%);
@@ -25,7 +31,7 @@ const ButtonStyled = styled.button`
 
 const Button: React.FC<ButtonProps> = (props) => {
   return (
-    <ButtonStyled onClick={props.clickHandler}>{props.children}</ButtonStyled>
+    <ButtonStyled disabled={props.isActive} isActive={props.isActive} onClick={props.clickHandler}>{props.children}</ButtonStyled>
   );
 };
 
