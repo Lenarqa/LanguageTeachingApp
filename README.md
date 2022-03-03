@@ -1,4 +1,10 @@
-heroku может долго грузиться (секунд 15-30)
+## Github pages
+
+[Зайти посмотреть / Enter to watch](https://lenarqa.github.io/LanguageTeachingApp/).
+
+## Heroku
+
+heroku может долго грузиться (секунд 15-30) -- начал вообще долго (возможно из за санкций) грузиться поэтому перенес на github pages
 
 [Зайти посмотреть / Enter to watch](https://language-teaching-app.herokuapp.com/).
 
