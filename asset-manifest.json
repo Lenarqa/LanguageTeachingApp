@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.js": "/LanguageTeachingApp/static/js/main.bc153753.js",
+    "static/js/787.16655c30.chunk.js": "/LanguageTeachingApp/static/js/787.16655c30.chunk.js",
+    "index.html": "/LanguageTeachingApp/index.html",
+    "main.bc153753.js.map": "/LanguageTeachingApp/static/js/main.bc153753.js.map",
+    "787.16655c30.chunk.js.map": "/LanguageTeachingApp/static/js/787.16655c30.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.bc153753.js"
+  ]
+}
